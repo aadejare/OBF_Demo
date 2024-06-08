@@ -1,2 +1,6 @@
 ./demo_obs.py
 ./example.json
+*.db-shm
+obfsql.db-wal
+obfsql.db-shm
+obfsql.db-shm

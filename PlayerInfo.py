@@ -7,13 +7,15 @@ from obsmodels import PROJECT_PATH, db, PersonalInformationObf
 
 class PlayerInfo():
 	# Initialize the data
-	def __init__(self,name=None,language=None,gender=None, country=None, pronouns=None, other=None):
+	def __init__(self,name=None,language=None,gender=None, country=None, pronouns=None, \
+	other=None,entrant_tag=None):
 		self.name = name
 		self.country = country
 		self.gender = gender
 		self.pronouns=pronouns
 		self.other = other
 		self.language = language
+		self.entrant_tag = entrant_tag
 
 	def saveplayerinfo(self,savedata='update'):
 		"""Save player information
@@ -28,7 +30,7 @@ class PlayerInfo():
 			db.close()
 			db.connect()
 		query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.name==self.name)
+					PersonalInformationObf.entrant_tag==self.entrant_tag)
 		if query.exists():
 			if savedata == 'new':
 				return -1
@@ -40,7 +42,8 @@ class PlayerInfo():
 					name = self.name,
 					other = self.other,
 					pronouns = self.pronouns ,
-				).where(PersonalInformationObf.name == self.name)
+					entrant_tag = self.entrant_tag,
+				).where(PersonalInformationObf.entrant_tag == self.entrant_tag)
 				PInfo.execute()
 				db.close()
 				return 1
@@ -52,6 +55,7 @@ class PlayerInfo():
 				name = self.name,
 				other = self.other,
 				pronouns = self.pronouns ,
+				entrant_tag = self.entrant_tag
 			)
 			PInfo.save()
 			db.close()
@@ -69,19 +73,31 @@ class PlayerInfo():
 			db.close()
 			db.connect()
 		query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.name==self.name)
+					PersonalInformationObf.entrant_tag == self.entrant_tag)
 		if query.exists():
 			query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.name==self.name).get()
+					PersonalInformationObf.entrant_tag == self.entrant_tag).get()
 			return query
 		else:
 			return None
 	def exportplayerinfo(self):
+		"""Export Player info into a dictonary
+		
+		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
+		:type: str
+		:return: dict
+		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		player_obj =  model_to_dict(self.getplayerinfo())
-		## Multiple fetches use this 
-		#https://stackoverflow.com/questions/21975920/peewee-model-to-json
-		# users = list(User.select().where(User.name ** 'a%').dicts()) 
 		del player_obj['tableid'] # Delete table id since it's not needed
+		return player_obj
+	def exportplayerinfojson(self):
+		"""Export Player info into a json string
+		
+		:param none: 
+		:type: str
+		:return: str
+		"""	
+		player_obj = self.exportplayerinfo()
 		return json.dumps(str({'personalInformation':player_obj}))
 		

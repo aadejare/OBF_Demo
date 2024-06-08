@@ -32,7 +32,7 @@ class EntrantObf(BaseModel):
 	initial_seed = IntegerField(column_name='initialSeed', null=True)
 	other = BlobField(null=True)
 	personal_information = IntegerField(column_name='personalInformation', null=True)
-	set_id = TextField(column_name='setID', unique=True)
+	setID = TextField(column_name='setID', unique=True)
 	tableid = AutoField(null=True)
     
 	class Meta:
@@ -78,6 +78,7 @@ class PersonalInformationObf(BaseModel):
 	other = BlobField(null=True)
 	pronouns = TextField(null=True)
 	tableid = AutoField(null=True)
+	entrant_tag =  TextField(column_name='entrant_tag',null=False)
 
 	class Meta:
 		database =db
