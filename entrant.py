@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ##Build using Bootstrap, Flask, Flask-WTForms
-import re, os, sys, time, shutil, numpy, cgi, cgitb, json
+import re, os, sys, time, shutil, json
 ##This contains the demographics of the user which can be used to help customize the experience.
 ##Redundancies are made to ensure the reusability of the package
 from obsmodels import PROJECT_PATH, db, EntrantObf

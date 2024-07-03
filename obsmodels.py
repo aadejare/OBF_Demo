@@ -31,7 +31,7 @@ class EntrantObf(BaseModel):
 	final_placement = IntegerField(column_name='finalPlacement', null=True)
 	initial_seed = IntegerField(column_name='initialSeed', null=True)
 	other = BlobField(null=True)
-	personal_information = IntegerField(column_name='personalInformation', null=True)
+	personalInformation = BlobField(column_name='personalInformation', null=True)
 	setID = TextField(column_name='setID', unique=True)
 	tableid = AutoField(null=True)
     
@@ -86,8 +86,8 @@ class PersonalInformationObf(BaseModel):
 
 class PhaseObf(BaseModel):
 	other = BlobField(null=True)
-	phase_id = TextField(column_name='phaseID', unique=True)
-	phase_structure = TextField(column_name='phaseStructure', null=True)
+	phaseID = TextField(column_name='phaseID', unique=True)
+	phaseStructure = TextField(column_name='phaseStructure', null=True)
 	tableid = AutoField(null=True)
 
 	class Meta:
