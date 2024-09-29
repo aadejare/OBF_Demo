@@ -1,13 +1,10 @@
 #!/usr/bin/env python
-##Build using Bootstrap, Flask, Flask-WTForms
 import re, os, sys, time, shutil, json
-##This contains the demographics of the user which can be used to help customize the experience.
-##Redundancies are made to ensure the reusability of the package
 from obsmodels import PROJECT_PATH, db, EntrantObf
 
 class Entrant():
 	# Initialize the data
-	def __init__(self,entrant_tag=None,entrant_team=None,final_placement=None,\
+	def __init__(self,entrant_tag=None,final_placement=None,\
 				initial_seed=None, setID=None, personalInformation = None, other=None):
 		self.entrant_tag = entrant_tag
 		self.entrant_team = entrant_team
@@ -38,7 +35,6 @@ class Entrant():
 			else:
 				EInfo = EntrantObf.update(
 					entrant_tag = self.entrant_tag,
-					entrant_team = self.entrant_team,
 					final_placement = self.final_placement,
 					initial_seed = self.initial_seed,
 					other = self.other,
@@ -49,16 +45,16 @@ class Entrant():
 				db.close()
 				return 1
 		else:
-			EInfo = EntrantObf(
+			import secrets
+			EInfo = EntrantObf.create(
 						entrant_tag = self.entrant_tag,
-						entrant_team = self.entrant_team,
 						final_placement = self.final_placement,
 						initial_seed = self.initial_seed,
 						other = self.other,
 						personalInformation = self.personalInformation,
 						setID = self.setID,
+						tableid = str(secrets.token_hex(nbytes=16))
 							)
-			EInfo.save()
 			db.close()
 		return 1
 	def getentrantinfo(self):
