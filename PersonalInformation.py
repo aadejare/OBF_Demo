@@ -57,7 +57,7 @@ class PersonalInformation():
 				other = self.other,
 				pronouns = self.pronouns ,
 				entrant_tag = self.entrant_tag,
-				tableid = str(secrets.token_hex(nbytes=16))
+				tableid = str(secrets.token_hex())
 			)
 			db.close()
 		return 1

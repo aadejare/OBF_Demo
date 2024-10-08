@@ -53,7 +53,7 @@ class Entrant():
 						other = self.other,
 						personalInformation = self.personalInformation,
 						setID = self.setID,
-						tableid = str(secrets.token_hex(nbytes=16))
+						tableid = str(secrets.token_hex())
 							)
 			db.close()
 		return 1

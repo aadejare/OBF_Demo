@@ -67,7 +67,7 @@ class Event():
 				ruleset = self.ruleset,
 				tournamentStructure = self.tournamentStructure,
 				other = self.other,
-				tableid = str(secrets.token_hex(nbytes=16))
+				tableid = str(secrets.token_hex())
 							)
 			db.close()
 		return 1

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil,json
 
-from obsmodels import PROJECT_PATH, db, GameObf
+from obsmodels import PROJECT_PATH, db, GameObf, CharactersObf
 
 	
 class Game():
@@ -31,11 +31,14 @@ class Game():
 			if savedata == 'new':
 				return -1
 			else:
+				query = GameObf.select().where(\
+					GameObf.gameNumber==self.gameNumber).get()
+					## Get the hashes
+				entrant1hash = query.entrant1Characters
+				entrant2hash = query.entrant2Characters
 				GameInfo = GameObf.update(
-						entrant1Characters=\
-									",".join(map(str, self.entrant1Characters)).encode('ASCII'),
-						entrant2Characters=\
-									",".join(map(str, self.entrant2Characters)).encode('ASCII'),
+						entrant1Characters=entrant1hash,
+						entrant2Characters=entrant2hash,
 						entrant1Result=self.entrant1Result,
 						entrant2Result=self.entrant2Result,
 						gameNumber=self.gameNumber,
@@ -43,20 +46,48 @@ class Game():
 						other=self.other
 				).where(GameObf.gameNumber==self.gameNumber)
 				GameInfo.execute()
+				eh_list =[]
+				for i in self.entrant1Characters:
+					eh_list.append({
+					'entrantCharacterName': i,
+					'entrantCharacterNameID': entrant1hash})
+				for i in self.entrant2Characters:
+					eh_list.append({
+					'entrantCharacterName': i,
+					'entrantCharacterNameID': entrant2hash})
+				CharInfo = CharactersObf.delete().where(\
+				CharactersObf.entrantCharacterNameID.in_(\
+				[entrant1hash,entrant2hash])).execute()	
+				CharInfo = CharactersObf.insert_many(eh_list)
+				CharInfo.execute()
 				db.close()
 				return 1
 		else:
 			import secrets
+			entrant1hash = str(secrets.token_hex(nbytes=16).encode("utf-8"))	
+			entrant2hash = str(secrets.token_hex(nbytes=16).encode("utf-8"))	
 			GameInfo = GameObf.create(
-						entrant1Characters=self.entrant1Characters,
-						entrant2Characters=self.entrant2Characters,
+						entrant1Characters=entrant1hash,
+						entrant2Characters=entrant2hash,
 						entrant1Result=self.entrant1Result,
 						entrant2Result=self.entrant2Result,
 						gameNumber=self.gameNumber,
 						stage=self.stage,
 						other=self.other,
-						tableid = str(secrets.token_hex(nbytes=16))	
+						tableid = str(secrets.token_hex())	
 				)
+			#Entrance dictionary for inserts
+			eh_list =[]
+			for i in self.entrant1Characters:
+				eh_list.append({
+				'entrantCharacterName': i,
+				'entrantCharacterNameID': entrant1hash})
+			for i in self.entrant2Characters:
+				eh_list.append({
+				'entrantCharacterName': i,
+				'entrantCharacterNameID': entrant2hash})
+			CharInfo = CharactersObf.insert_many(eh_list)
+			CharInfo.execute()
 			db.close()
 		return 1
 	def getgame(self):
@@ -76,7 +107,21 @@ class Game():
 		if query.exists():
 			query = GameObf.select().where(\
 					GameObf.gameNumber==self.gameNumber).get()
-
+			entrant1list = []
+			entrant2list = []
+			entrant1hash = query.entrant1Characters.decode("utf-8")
+			entrant2hash = query.entrant2Characters.decode("utf-8")
+			CharInfo = CharactersObf.select().where(\
+				CharactersObf.entrantCharacterNameID.in_(\
+				[str(entrant1hash),str(entrant2hash)]))
+			CharInfo.execute()	
+			for i in CharInfo:
+				if i.entrantCharacterNameID == str(entrant1hash):
+					entrant1list.append(i.entrantCharacterName)
+				else:
+					entrant2list.append(i.entrantCharacterName)
+			query.entrant1Characters = entrant1list
+			query.entrant2Characters = entrant2list
 			return query
 		else:
 			return None
@@ -89,10 +134,6 @@ class Game():
 			"""	
 			from playhouse.shortcuts import model_to_dict, dict_to_model
 			game_obj =  model_to_dict(self.getgame())
-			game_obj['entrant1Characters'] = \
-				[i for i in game_obj['entrant1Characters'].decode('utf-8').split(',')]
-			game_obj['entrant2Characters'] = \
-				[i for i in game_obj['entrant2Characters'].decode('utf-8').split(',')]
 			del game_obj['tableid'] # Delete table id since it's not needed
 			return game_obj
 	def exportgamejson(self):

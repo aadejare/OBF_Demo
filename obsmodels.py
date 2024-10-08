@@ -39,6 +39,14 @@ class EntrantObf(BaseModel):
 		database =db
 		table_name = 'EntrantOBF'
 
+class CharactersObf(BaseModel):
+	entrantCharacterName = TextField(column_name='entrantCharacterName', unique=True)
+	entrantCharacterNameID = TextField(column_name='entrantCharacterNameID')
+	tableid = AutoField()
+	class Meta:
+		database =db
+		table_name = 'CharactersObf'
+
 class EventObf(BaseModel):
 	eventDate = TextField(null=True)
 	gameName = TextField(column_name='gameName', null=True)

@@ -34,6 +34,12 @@ entrant2Result text CHECK (entrant2Result in ('win','lose','draw','Win','Lose','
 other blob
 );
 
+CREATE TABLE CharactersObf  (
+  tableid integer NOT NULL PRIMARY KEY,
+  entrantCharacterName TEXT,
+  entrantCharacterNameID TEXT NOT NULL
+);
+
 CREATE TABLE PersonalInformationOBF (
   tableid Text NOT NULL PRIMARY KEY,
   name text,
