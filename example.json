@@ -6,6 +6,7 @@
         "gameName": "Super Smash Brothers Melee",
         "ruleset": "default",
         "originURL": "www.example.com",
+        "tournamentStructure": "single-elim",
         "numberEntrants": 2
     },
     "sets": [

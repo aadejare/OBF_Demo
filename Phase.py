@@ -2,7 +2,7 @@
 ##Build using Bootstrap, Flask, Flask-WTForms
 import re, os, sys, time, shutil,json
 
-from obsmodels import PROJECT_PATH, db, PhaseObf
+from obfmodels import PROJECT_PATH, db, PhaseObf
 
 class GamePhase():
 	# Initialize the data

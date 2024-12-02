@@ -3,19 +3,21 @@
 import re, os, sys, time, shutil, json
 ##This contains the demographics of the user which can be used to help customize the experience.
 ##Redundancies are made to ensure the reusability of the package
-from obsmodels import PROJECT_PATH, db, PersonalInformationObf
+from obfmodels import PROJECT_PATH, db, PersonalInformationObf
 
 class PersonalInformation():
 	# Initialize the data
-	def __init__(self,name=None,language=None,gender=None, country=None, pronouns=None, \
-	other=None,entrant_tag=None):
+	def __init__(self,name=None,entrant_language=None,gender=None, country=None, pronouns=None, \
+	other=None,entrantTag=None, prefix=None):
 		self.name = name
 		self.country = country
 		self.gender = gender
 		self.pronouns=pronouns
 		self.other = other
-		self.language = language
-		self.entrant_tag = entrant_tag
+## Using entrant_ for a way to make sure that when parsing back the data it gets correctly labeled
+		self.entrant_language = entrant_language
+		self.prefix = prefix
+		self.entrantTag = entrantTag
 
 	def savepersonalinformationinfo(self,savedata='update'):
 		"""Save player information
@@ -30,7 +32,7 @@ class PersonalInformation():
 			db.close()
 			db.connect()
 		query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.entrant_tag==self.entrant_tag)
+					PersonalInformationObf.entrantTag==self.entrantTag)
 		if query.exists():
 			if savedata == 'new':
 				return -1
@@ -38,12 +40,13 @@ class PersonalInformation():
 				PInfo = PersonalInformationObf.update(
 					country = self.country,
 					gender = self.gender ,
-					language = self.language ,
+					entrant_language = self.entrant_language,
 					name = self.name,
 					other = self.other,
-					pronouns = self.pronouns ,
-					entrant_tag = self.entrant_tag,
-				).where(PersonalInformationObf.entrant_tag == self.entrant_tag)
+					pronouns = self.pronouns,
+					entrant_prefix = self.prefix,
+					entrantTag = self.entrantTag,
+				).where(PersonalInformationObf.entrantTag == self.entrantTag)
 				PInfo.execute()
 				db.close()
 				return 1
@@ -52,12 +55,14 @@ class PersonalInformation():
 			PInfo = PersonalInformationObf.create(
 				country = self.country,
 				gender = self.gender ,
-				language = self.language ,
+				entrant_language = self.entrant_language,
 				name = self.name,
 				other = self.other,
-				pronouns = self.pronouns ,
-				entrant_tag = self.entrant_tag,
-				tableid = str(secrets.token_hex())
+				pronouns = self.pronouns,
+				entrant_prefix = self.prefix,
+				entrantTag = self.entrantTag,
+				tableid = secrets.token_hex(nbytes=16)
+
 			)
 			db.close()
 		return 1
@@ -74,10 +79,11 @@ class PersonalInformation():
 			db.close()
 			db.connect()
 		query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.entrant_tag == self.entrant_tag)
+					PersonalInformationObf.entrantTag == self.entrantTag)
 		if query.exists():
-			query = PersonalInformationObf.get(\
-					PersonalInformationObf.entrant_tag == self.entrant_tag)
+			query = PersonalInformationObf.select().where(\
+					PersonalInformationObf.entrantTag == self.entrantTag).get()
+			db.close()
 			return query
 		else:
 			return None
@@ -91,6 +97,9 @@ class PersonalInformation():
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		player_obj =  model_to_dict(self.getpersonalinformationinfo())
 		del player_obj['tableid'] # Delete table id since it's not needed
+		player_obj['prefix'] = player_obj['entrant_prefix']
+		player_obj['language'] = player_obj['entrant_language']
+		del player_obj['entrant_prefix'], player_obj['entrant_language']
 		return player_obj
 	def exportpersonalinformationinfojson(self):
 		"""Export Player info into a json string

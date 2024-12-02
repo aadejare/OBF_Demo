@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil, json
-from obsmodels import PROJECT_PATH, db, EventObf
+from obfmodels import PROJECT_PATH, db, EventObf
 
 class Event():
 	# Initialize the data
 	def __init__(self,eventDate=None,gameName=None,name=None,\
 				numberEntrants=None, originURL=None, phaseID=None,\
 				phases = None, ruleset=None,
-				tournamentStructure=None, other=None):
+				tournamentStructure=None, 
+				tournamentID = None, other=None):
 		self.eventDate = eventDate
 		self.gameName = gameName
 		self.name = name
@@ -17,9 +18,8 @@ class Event():
 		self.phases = phases
 		self.ruleset = ruleset
 		self.tournamentStructure = tournamentStructure
+		self.tournamentID = tournamentID
 		self.other = other
-
-    
 
 	def saveeventinfo(self,savedata='update'):
 		"""Save event information
@@ -34,23 +34,29 @@ class Event():
 			db.close()
 			db.connect()
 		query = EventObf.select().where(\
-					EventObf.name==self.name)
+					EventObf.name==self.name, EventObf.tournamentID==self.tournamentID)
 		if query.exists():
 			if savedata == 'new':
 				return -1
 			else:
+				query = EventObf.select().where(\
+					EventObf.name==self.name, EventObf.tournamentID==self.tournamentID)\
+					.get()
+				tablehash = query.tableid
 				EInfo = EventObf.update(
-		eventDate = self.eventDate,
-		gameName = self.gameName,
-		name = self.name,
-		numberEntrants = self.numberEntrants,
-		originURL = self.originURL,
-		phaseID = self.phaseID,
-		phases = self.phases,
-		ruleset = self.ruleset,
-		tournamentStructure = self.tournamentStructure,
-		other = self.other
-				).where(EventObf.name == self.name)
+					eventDate = self.eventDate,
+					gameName = self.gameName,
+					name = self.name,
+					numberEntrants = self.numberEntrants,
+					originURL = self.originURL,
+					phaseID = self.phaseID,
+					phases = self.phases,
+					ruleset = self.ruleset,
+					tournamentStructure = self.tournamentStructure,
+					other = self.other,
+					tournamentID = self.tournamentID,
+					tableid = tablehash
+							).where(EventObf.name == self.name,EventObf.tournamentID==self.tournamentID)
 				EInfo.execute()
 				db.close()
 				return 1
@@ -67,7 +73,8 @@ class Event():
 				ruleset = self.ruleset,
 				tournamentStructure = self.tournamentStructure,
 				other = self.other,
-				tableid = str(secrets.token_hex())
+				tournamentID = self.tournamentID,
+				tableid = secrets.token_hex(nbytes=16)
 							)
 			db.close()
 		return 1
@@ -86,7 +93,8 @@ class Event():
 		query = EventObf.select().where(EventObf.name == self.name)
 		if query.exists():
 			query = EventObf.select().where(\
-					EventObf.name==self.name).get()
+					EventObf.name==self.name, EventObf.tournamentID==self.tournamentID).get()
+			del query['tableid']
 			return query
 		else:
 			return None

@@ -25,20 +25,6 @@ class BaseModel(Model):
 	class Meta:
 		database = db
 
-class EntrantObf(BaseModel):
-	entrantTag = TextField(column_name='entrantTag', null=True)
-	entrantTeam = BooleanField(column_name='entrantTeam', null=True)
-	finalPlacement = IntegerField(column_name='finalPlacement', null=True)
-	initialSeed = IntegerField(column_name='initialSeed', null=True)
-	other = BlobField(null=True)
-	personalInformation = BlobField(column_name='personalInformation', null=True)
-	setID = TextField(column_name='setID', unique=True)
-	tableid = TextField(unique=True, primary_key=True)
-    
-	class Meta:
-		database =db
-		table_name = 'EntrantOBF'
-
 class CharactersObf(BaseModel):
 	entrantCharacterName = TextField(column_name='entrantCharacterName', unique=True)
 	entrantCharacterNameID = TextField(column_name='entrantCharacterNameID')
@@ -46,6 +32,21 @@ class CharactersObf(BaseModel):
 	class Meta:
 		database =db
 		table_name = 'CharactersObf'
+
+class EntrantObf(BaseModel):
+	entrantID = TextField(column_name='entrantID', null=False)
+	entrantTag = TextField(column_name='entrantTag')
+	entrantTeam = TextField(column_name='entrantTeam', null=True)
+	finalPlacement = IntegerField(column_name='finalPlacement', null=True)
+	initialSeed = IntegerField(column_name='initialSeed', null=True)
+	other = BlobField(null=True)
+	tableid = TextField(unique=True, primary_key=True)
+	tournamentID = TextField()
+
+    
+	class Meta:
+		database =db
+		table_name = 'EntrantOBF'
 
 class EventObf(BaseModel):
 	eventDate = TextField(null=True)
@@ -58,6 +59,7 @@ class EventObf(BaseModel):
 	phases = BlobField(null=True)
 	ruleset = TextField(null=True)
 	tableid = TextField(unique=True, primary_key=True)
+	tournamentID = TextField()
 	tournamentStructure = TextField(column_name='tournamentStructure', null=True)
 
 	class Meta:
@@ -72,6 +74,7 @@ class GameObf(BaseModel):
 	gameNumber = IntegerField(column_name='gameNumber', unique=True)
 	other = BlobField(null=True)
 	stage = TextField(null=True)
+	setID = TextField(null=True)
 	tableid = TextField(unique=True, primary_key=True)
 
 	class Meta:
@@ -81,12 +84,13 @@ class GameObf(BaseModel):
 class PersonalInformationObf(BaseModel):
 	country = TextField(null=True)
 	gender = TextField(null=True)
-	language = BlobField(null=True)
+	entrant_language = BlobField(null=True)
 	name = TextField(null=True)
 	other = BlobField(null=True)
 	pronouns = TextField(null=True)
 	tableid = TextField(unique=True, primary_key=True)
-	entrant_tag =  TextField(column_name='entrant_tag',null=False)
+	entrantTag =  TextField(column_name='entrantTag',null=False)
+	entrant_prefix = TextField(null=True)
 
 	class Meta:
 		database =db
@@ -112,26 +116,28 @@ class SetObf(BaseModel):
 	entrant2Result = TextField(column_name='entrant2Result', null=True)
 	entrant2Score = IntegerField(column_name='entrant2Score')
 	games = BlobField(null=True)
-	loserNextSetID = TextField(column_name='loserNextSetID', null=True)
+	entrant1NextSetID = TextField(column_name='entrant1NextSetID', null=True)
 	other = BlobField(null=True)
-	phaseId = TextField(column_name='phaseID', null=True)
-	roundId = TextField(column_name='roundID', null=True)
+	phaseID = TextField(column_name='phaseID', null=True)
+	roundID = TextField(column_name='roundID', null=True)
 	setFormat = TextField(column_name='setFormat', null=True)
 	setID = TextField(column_name='setID', unique=True)
 	status = TextField(null=True)
 	tableid = TextField(unique=True, primary_key=True)
-	winnernextsetID = TextField(column_name='winnerNextSetID', null=True)
+	entrant2NextSetID = TextField(column_name='entrant2NextSetID', null=True)
+	tournamentID = TextField(column_name='tournamentID')
 
 	class Meta:
 		database =db
 		table_name = 'SetOBF'
 
 class TournamentObf(BaseModel):
-	entrants = BlobField()
-	event = TextField()
+	tournamentTitle = TextField(column_name='tournamentTitle')
+	definitions = TextField()
+	description = TextField()
 	obfversion = TextField(null=True,
 	constraints=[Check("obfversion\\ in\\ \\('v0\\.1',\\ 'v0\\.2'\\)")])
-	sets = BlobField()
+	tournamentID = TextField(column_name='tournamentID',unique=True)
 	tableid = TextField(unique=True, primary_key=True)
 	
 	class Meta:

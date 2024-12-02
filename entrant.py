@@ -1,18 +1,21 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil, json
-from obsmodels import PROJECT_PATH, db, EntrantObf
+from obfmodels import PROJECT_PATH, db, EntrantObf, PersonalInformationObf
+from PersonalInformation import PersonalInformation
 
 class Entrant():
 	# Initialize the data
-	def __init__(self,entrant_tag=None,final_placement=None,\
-				initial_seed=None, setID=None, personalInformation = None, other=None):
-		self.entrant_tag = entrant_tag
-		self.entrant_team = entrant_team
-		self.final_placement = final_placement
-		self.initial_seed = initial_seed
+	def __init__(self,entrantTag=None,entrantID=None,finalPlacement=None,\
+				initialSeed=None, personalInformation = None, 
+				tournamentID=None, entrantTeam='None', other=None):
+		self.entrantTag = entrantTag
+		self.entrantID = entrantID
+		self.entrantTeam = entrantTeam
+		self.finalPlacement = finalPlacement
+		self.initialSeed = initialSeed
 		self.other = other
 		self.personalInformation = personalInformation
-		self.setID = setID
+		self.tournamentID = tournamentID
     
 
 	def saveentrantinfo(self,savedata='update'):
@@ -28,32 +31,73 @@ class Entrant():
 			db.close()
 			db.connect()
 		query = EntrantObf.select().where(\
-					EntrantObf.entrant_tag==self.entrant_tag)
+					EntrantObf.entrantTag==self.entrantTag,
+					EntrantObf.tournamentID == self.tournamentID)
 		if query.exists():
 			if savedata == 'new':
 				return -1
 			else:
+				# Break the PI data into dictionary form
+				pi_dict = self.personalInformation[0]
+				# Try and catch for data
+				pifields = ['name','gender','country','pronouns','tag','prefix', 'language','other']
+				for pif in pifields:
+					if pif not in pi_dict.keys():
+						pi_dict[pif] = None
+				## Save PI first then Entrant data
+				PI_Data = PersonalInformation(
+				name=pi_dict['name'],
+				country=pi_dict['country'],
+				gender=pi_dict['gender'],
+				prefix=pi_dict['prefix'],
+				pronouns=pi_dict['pronouns'],
+				other=pi_dict['other'],
+				entrant_language =pi_dict['language'],
+				entrantTag=self.entrantTag)
+				if PI_Data.savepersonalinformationinfo('new') == -1:
+					PI_Data.savepersonalinformationinfo() 
 				EInfo = EntrantObf.update(
-					entrant_tag = self.entrant_tag,
-					final_placement = self.final_placement,
-					initial_seed = self.initial_seed,
+					entrantID = self.entrantID,
+					entrantTag = self.entrantTag,
+					entrantTeam = self.entrantTeam,
+					finalPlacement = self.finalPlacement,
+					initialSeed = self.initialSeed,
 					other = self.other,
-					personalInformation = self.personalInformation,
-					setID = self.setID,
-				).where(EntrantObf.entrant_tag == self.entrant_tag)
+					tournamentID = self.tournamentID
+				).where(EntrantObf.entrantTag == self.entrantTag,
+						EntrantObf.tournamentID == self.tournamentID)
 				EInfo.execute()
 				db.close()
 				return 1
 		else:
 			import secrets
+			# Break the PI data into dictionary form
+			pi_dict = self.personalInformation[0]
+			## Save PI first then Entrant data
+			pifields = ['name','gender','country','pronouns','tag','prefix', 'language','other']
+			for pif in pifields:
+				if pif not in pi_dict.keys():
+					pi_dict[pif] = None
+			PI_Data = PersonalInformation(
+			name=pi_dict['name'],
+			country=pi_dict['country'],
+			gender=pi_dict['gender'],
+			prefix=pi_dict['prefix'],
+			pronouns=pi_dict['pronouns'],
+			other=pi_dict['other'],
+			entrant_language =pi_dict['language'],
+			entrantTag=self.entrantTag)
+			if PI_Data.savepersonalinformationinfo('new') == -1:
+				PI_Data.savepersonalinformationinfo() 
 			EInfo = EntrantObf.create(
-						entrant_tag = self.entrant_tag,
-						final_placement = self.final_placement,
-						initial_seed = self.initial_seed,
+						entrantID = self.entrantID,
+						entrantTag = self.entrantTag,
+						entrantTeam = self.entrantTeam,
+						finalPlacement = self.finalPlacement,
+						initialSeed = self.initialSeed,
 						other = self.other,
-						personalInformation = self.personalInformation,
-						setID = self.setID,
-						tableid = str(secrets.token_hex())
+						tournamentID = self.tournamentID,
+						tableid = secrets.token_hex(nbytes=16)
 							)
 			db.close()
 		return 1
@@ -70,10 +114,12 @@ class Entrant():
 			db.close()
 			db.connect()
 		query = EntrantObf.select().where(\
-					EntrantObf.entrant_tag==self.entrant_tag)
+					EntrantObf.entrantTag==self.entrantTag,
+					EntrantObf.tournamentID == self.tournamentID)
 		if query.exists():
 			query = EntrantObf.select().where(\
-					EntrantObf.entrant_tag==self.entrant_tag).get()
+					EntrantObf.entrantTag==self.entrantTag,
+					EntrantObf.tournamentID == self.tournamentID).get()
 			return query
 		else:
 			return None
@@ -87,6 +133,8 @@ class Entrant():
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		entrant_obj =  model_to_dict(self.getentrantinfo())
 		del entrant_obj['tableid'] # Delete table id since it's not needed
+		del entrant_obj['tournamentID'] # Delete tournament ID since it's not needed
+
 		return entrant_obj
 	def exportentrantinfojson(self):
 		"""Export Player info into a json string
@@ -97,4 +145,48 @@ class Entrant():
 		"""	
 		entrant_obj = self.exportentrantinfo()
 		return json.dumps(str({'Entrant':entrant_obj}))
-		
+	def exportentrants(self):
+		"""Export the list of entrants and their personal infomation
+		:param none:
+		:type: str
+		"""
+		from playhouse.shortcuts import model_to_dict
+		entrantslist = []
+		try:
+			db.connect()
+		except Exception as e:
+			db.close()
+			db.connect()
+		query = EntrantObf.select().where(\
+					EntrantObf.tournamentID == self.tournamentID)\
+					.order_by(EntrantObf.entrantTag)
+		if query.exists(): #Check to see if it's none
+			query = EntrantObf.select().where(\
+					EntrantObf.tournamentID == self.tournamentID)\
+					.order_by(EntrantObf.entrantTag)
+		else:
+			db.close()
+			return None
+		looper = -1
+		for ix in query:
+			looper+=1
+			print("Hello: " + str(ix.entrantTag))
+			entrant_subquery = EntrantObf.select( EntrantObf.entrantID,
+				EntrantObf.entrantTag,EntrantObf.finalPlacement,\
+				EntrantObf.initialSeed, 
+				EntrantObf.entrantTeam, EntrantObf.other\
+				).where(EntrantObf.entrantTag==ix.entrantTag,
+					EntrantObf.tournamentID == ix.tournamentID).get()
+			PI_Data = PersonalInformationObf.select()\
+				.where(PersonalInformationObf.entrantTag==ix.entrantTag).get()
+			pi_export =  model_to_dict(PI_Data)
+### Because PI closes the database we need to open the db again
+			del pi_export['tableid']
+			entrant_subquery_obj =  model_to_dict(entrant_subquery)
+			del entrant_subquery_obj['tableid'] # Delete table id since it's not needed
+			del entrant_subquery_obj['tournamentID'] # Delete set ID since it's not needed
+			#Add in personal information
+			entrant_subquery_obj['personalInformation'] = pi_export
+			entrantslist.append(entrant_subquery_obj)
+			print("WWWW")
+		return entrantslist

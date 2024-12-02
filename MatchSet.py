@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil,json
 
-from obsmodels import PROJECT_PATH, db, SetObf
+from obfmodels import PROJECT_PATH, db, SetObf
 #Called MatchSet because SET is a reserved word in Python
 
 
@@ -10,10 +10,11 @@ class MatchSet():
 	def __init__(self,setID=None, entrant1ID=None,entrant2ID=None, status=None,\
 				entrant1Result=None,entrant2Result=None,\
 				entrant1Score=None, entrant2Score=None,
-				winnerNextSetID=None, loserNextSetID=None,
+				entrant1NextSetID=None, entrant2NextSetID=None,
 				entrant1PrevSetID=None, entrant2PrevSetID=None,
-				setFormat=None, phaseID=None,roundID=None, games=None, other=None):
-		self.setID = setID
+				setFormat=None, phaseID=None,roundID=None, games=None, 
+				tournamentID=None, other=None):
+		self.setID = setID #Assume that SetID is unique
 		self.entrant1ID=entrant1ID
 		self.entrant2ID=entrant2ID
 		self.status=status
@@ -21,14 +22,15 @@ class MatchSet():
 		self.entrant2Result=entrant2Result
 		self.entrant1Score=entrant1Score
 		self.entrant2Score=entrant2Score
-		self.winnerNextSetID=winnerNextSetID
-		self.loserNextSetID=loserNextSetID
+		self.entrant1NextSetID=entrant1NextSetID
+		self.entrant2NextSetID=entrant2NextSetID
 		self.entrant1PrevSetID=entrant1PrevSetID
 		self.entrant2PrevSetID=entrant2PrevSetID
 		self.setFormat=setFormat
 		self.phaseID=phaseID
 		self.roundID=roundID
 		self.games=games
+		self.tournamentID = tournamentID
 		self.other = other
 
 	def saveset(self,savedata='update'):
@@ -43,6 +45,10 @@ class MatchSet():
 			if savedata == 'new':
 				return -1
 			else:
+				query = SetObf.select().where(\
+					SetObf.setID==self.setID, 
+					SetObf.tournamentID==self.tournamentID).get()
+				tablehash = query.tableid
 				SETInfo = SetObf.update(
 					setID=self.setID,
 					entrant1ID=self.entrant1ID,
@@ -52,20 +58,24 @@ class MatchSet():
 					entrant2Result=self.entrant2Result,
 					entrant1Score=self.entrant1Score,
 					entrant2Score=self.entrant2Score,
-					winnerNextSetID=self.winnerNextSetID,
-					loserNextSetID=self.loserNextSetID,
+					entrant1NextSetID=self.entrant1NextSetID,
+					entrant2NextSetID=self.entrant2NextSetID,
 					entrant1PrevSetID=self.entrant1PrevSetID,
 					entrant2PrevSetID=self.entrant2PrevSetID,
 					setFormat=self.setFormat,
 					phaseID=self.phaseID,
 					roundID=self.roundID,
 					games=self.games,
+					tournamentID=self.tournamentID,
+					tableid = tablehash,
 					other=self.other,
-				).where(SetObf.setID==self.setID)
+				).where(SetObf.setID==self.setID, SetObf.tournamentID==self.tournamentID)
 				SETInfo.execute()
 				db.close()
 				return 1
 		else:
+			import secrets
+			sethash = secrets.token_hex(nbytes=16)
 			SETInfo = SetObf(
 					setID=self.setID,
 					entrant1ID=self.entrant1ID,
@@ -75,17 +85,19 @@ class MatchSet():
 					entrant2Result=self.entrant2Result,
 					entrant1Score=self.entrant1Score,
 					entrant2Score=self.entrant2Score,
-					winnerNextSetID=self.winnerNextSetID,
-					loserNextSetID=self.loserNextSetID,
+					entrant1NextSetID=self.entrant1NextSetID,
+					entrant2NextSetID=self.entrant2NextSetID,
 					entrant1PrevSetID=self.entrant1PrevSetID,
 					entrant2PrevSetID=self.entrant2PrevSetID,
 					setFormat=self.setFormat,
 					phaseID=self.phaseID,
 					roundID=self.roundID,
 					games=self.games,
+					tournamentID=self.tournamentID,
+					tableid = sethash,
 					other=self.other,
 				)
-			SETInfo.save()
+			SETInfo.save(force_insert=True)
 			db.close()
 		return 1
 	def getset(self):
@@ -101,24 +113,25 @@ class MatchSet():
 			db.close()
 			db.connect()
 		query = SetObf.select().where(\
-					SetObf.setID==self.setID)
+					SetObf.setID==self.setID, SetObf.tournamentID==self.tournamentID)
 		if query.exists():
 			query = SetObf.select().where(\
-					SetObf.setID==self.setID).get()
+					SetObf.setID==self.setID, SetObf.tournamentID==self.tournamentID).get()
 			return query
 		else:
 			return None
 	def exportset(self):
-			"""Export Set info into a dictonary
-		
-			:param savedata: Method of saving the data new is new data, rewrite is rewriting data
-			:type: str
-			:return: dict
-			"""	
-			from playhouse.shortcuts import model_to_dict, dict_to_model
-			player_obj =  model_to_dict(self.getset())
-			del player_obj['tableid'] # Delete table id since it's not needed
-			return player_obj
+		"""Export Set info into a dictonary
+	
+		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
+		:type: str
+		:return: dict
+		"""	
+		from playhouse.shortcuts import model_to_dict, dict_to_model
+		set_obj =  model_to_dict(self.getset())
+		del set_obj['tableid'] # Delete table id since it's not needed
+		del set_obj['tournamentID'] # Delete tournament ID since it's not needed
+		return set_obj
 	def exportphasejson(self):
 		"""Export Player info into a json string
 		
@@ -126,5 +139,5 @@ class MatchSet():
 		:type: str
 		:return: str
 		"""	
-		player_obj = self.exportset()
-		return json.dumps(str({'Set':player_obj}))
+		set_obj = self.exportset()
+		return json.dumps(str({'Set':set_obj}))
