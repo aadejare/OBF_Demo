@@ -1,0 +1,118 @@
+{
+    "eventDate": "2021-06-17",
+    "gameName": "Super Smash Brothers Melee",
+    "name": "Example Tournament",
+    "numberEntrants": 2,
+    "originURL": "www.example.com",
+    "other": null,
+    "phaseID": "fd1a7398c11d729cc9dc3fbe67342700",
+    "phases": [
+        {
+            "other": null,
+            "phaseID": "fd1a7398c11d729cc9dc3fbe67342700",
+            "phaseStructure": "Final"
+        }
+    ],
+    "ruleset": "default",
+    "tournamentID": "60a4345c2fccc4a1fcd5a0fa2b241f4c",
+    "tournamentStructure": "single-elim",
+    "sets": [
+        {
+            "entrant1ID": "alice",
+            "entrant1PrevSetID": null,
+            "entrant1Result": "win",
+            "entrant1Score": 3,
+            "entrant2ID": "dave",
+            "entrant2PrevSetID": null,
+            "entrant2Result": "lose",
+            "entrant2Score": 0,
+            "games": [
+                {
+                    "entrant1Characters": [
+                        "falco"
+                    ],
+                    "entrant1Result": "win",
+                    "entrant2Characters": [
+                        "peach"
+                    ],
+                    "entrant2Result": "lose",
+                    "gameNumber": 1,
+                    "other": null,
+                    "stage": "Final Destination"
+                },
+                {
+                    "entrant1Characters": [
+                        "falco"
+                    ],
+                    "entrant1Result": "win",
+                    "entrant2Characters": [
+                        "peach"
+                    ],
+                    "entrant2Result": "lose",
+                    "gameNumber": 2,
+                    "other": null,
+                    "stage": "Yoshi's Story"
+                },
+                {
+                    "entrant1Characters": [
+                        "falco"
+                    ],
+                    "entrant1Result": "win",
+                    "entrant2Characters": [
+                        "peach"
+                    ],
+                    "entrant2Result": "lose",
+                    "gameNumber": 3,
+                    "other": null,
+                    "stage": "Yoshi's Story"
+                }
+            ],
+            "entrant1NextSetID": "4",
+            "other": null,
+            "phaseID": "fd1a7398c11d729cc9dc3fbe67342700",
+            "roundID": null,
+            "setFormat": "bestof5",
+            "setID": "1",
+            "status": "completed",
+            "entrant2NextSetID": "3"
+        }
+    ],
+    "entrants": [
+        {
+            "entrantID": "Alice",
+            "entrantTag": "Alice",
+            "entrantTeam": "None",
+            "finalPlacement": 1,
+            "initialSeed": 1,
+            "other": null,
+            "personalInformation": {
+                "country": "USA",
+                "gender": null,
+                "entrant_language": null,
+                "name": "Alice Alice",
+                "other": null,
+                "pronouns": null,
+                "entrantTag": "Alice",
+                "entrant_prefix": "RUM"
+            }
+        },
+        {
+            "entrantID": "Dave",
+            "entrantTag": "Dave",
+            "entrantTeam": "None",
+            "finalPlacement": 2,
+            "initialSeed": 2,
+            "other": null,
+            "personalInformation": {
+                "country": "USA",
+                "gender": null,
+                "entrant_language": null,
+                "name": "Dave McDave",
+                "other": null,
+                "pronouns": null,
+                "entrantTag": "Dave",
+                "entrant_prefix": "ZEN"
+            }
+        }
+    ]
+}

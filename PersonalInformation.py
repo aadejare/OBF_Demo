@@ -3,7 +3,7 @@
 import re, os, sys, time, shutil, json
 ##This contains the demographics of the user which can be used to help customize the experience.
 ##Redundancies are made to ensure the reusability of the package
-from obfmodels import PROJECT_PATH, db, PersonalInformationObf
+from obfmodels import db, PersonalInformationObf
 
 class PersonalInformation():
 	# Initialize the data
@@ -19,7 +19,7 @@ class PersonalInformation():
 		self.prefix = prefix
 		self.entrantTag = entrantTag
 
-	def savepersonalinformationinfo(self,savedata='update'):
+	def savepersonalinformation(self,savedata='update'):
 		"""Save player information
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -66,7 +66,7 @@ class PersonalInformation():
 			)
 			db.close()
 		return 1
-	def getpersonalinformationinfo(self):
+	def getpersonalinformation(self):
 		"""Get player information
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -87,7 +87,7 @@ class PersonalInformation():
 			return query
 		else:
 			return None
-	def exportpersonalinformationinfo(self):
+	def exportpersonalinformation(self):
 		"""Export Player info into a dictonary
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -101,7 +101,7 @@ class PersonalInformation():
 		player_obj['language'] = player_obj['entrant_language']
 		del player_obj['entrant_prefix'], player_obj['entrant_language']
 		return player_obj
-	def exportpersonalinformationinfojson(self):
+	def exportpersonalinformationjsonstring(self):
 		"""Export Player info into a json string
 		
 		:param none: 

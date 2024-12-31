@@ -1,0 +1,201 @@
+{'SetGameResult': ['win', 'lose', 'draw', 'dq'], 'description': 'Tournament new quick', 'obfversion': 'v1.0', 'tournamentID': '7f4de5dd7aa561374d471441022cdc3d', 'title': 'Tournament new quick'}
+{'eventDate': '2021-12-17', 'gameName': 'Super Smash Brothers Ultimate', 'name': 'Example Tournament', 'numberEntrants': 4, 'originURL': 'www.example.com', 'other': None, 'ruleset': 'default', 'tournamentStructure': 'single-elim'}
+{'eventDate': '2021-12-17', 'gameName': 'Super Smash Brothers Ultimate', 'name': 'Example Tournament', 'numberEntrants': 4, 'originURL': 'www.example.com', 'other': None, 'ruleset': 'default', 'tournamentStructure': 'single-elim'}
+
+
+
+
+New set print: 
+
+
+
+{'eventDate': '2021-12-17', 'gameName': 'Super Smash Brothers Ultimate', 'name': 'Example Tournament', 'numberEntrants': 4, 'originURL': 'www.example.com', 'other': None, 'ruleset': 'default', 'tournamentStructure': 'single-elim'}
+Hello: Alice
+Hello: Dave
+Hello: Felicia
+Hello: Zay
+
+
+
+
+New set print final bracket: 
+
+
+
+{
+    "SetGameResult": [
+        "win",
+        "lose",
+        "draw",
+        "dq"
+    ],
+    "description": "Tournament new quick",
+    "obfversion": "v1.0",
+    "tournamentID": "7f4de5dd7aa561374d471441022cdc3d",
+    "title": "Tournament new quick",
+    "event": {
+        "eventDate": "2021-12-17",
+        "gameName": "Super Smash Brothers Ultimate",
+        "name": "Example Tournament",
+        "numberEntrants": 4,
+        "originURL": "www.example.com",
+        "other": null,
+        "ruleset": "default",
+        "tournamentStructure": "single-elim"
+    },
+    "phases": [
+        {
+            "other": null,
+            "phaseID": "208f7746431d04c1f1b8bb9ba71fb023",
+            "phaseStructure": "Final"
+        },
+        {
+            "other": null,
+            "phaseID": "46bd2789600453ea9b0a7b59125fc511",
+            "phaseStructure": "Top 4"
+        }
+    ],
+    "sets": [
+        {
+            "entrant1ID": "Alice",
+            "entrant1PrevSetID": null,
+            "entrant1Result": "win",
+            "entrant1Score": 3,
+            "entrant2ID": "Dave",
+            "entrant2PrevSetID": null,
+            "entrant2Result": "lose",
+            "entrant2Score": 0,
+            "games": [
+                {
+                    "entrant1Characters": [
+                        "falco"
+                    ],
+                    "entrant1Result": "win",
+                    "entrant2Characters": [
+                        "peach"
+                    ],
+                    "entrant2Result": "lose",
+                    "gameNumber": 1,
+                    "other": null,
+                    "stage": "Final Destination"
+                },
+                {
+                    "entrant1Characters": [
+                        "falco"
+                    ],
+                    "entrant1Result": "win",
+                    "entrant2Characters": [
+                        "peach"
+                    ],
+                    "entrant2Result": "lose",
+                    "gameNumber": 2,
+                    "other": null,
+                    "stage": "Yoshi's Story"
+                },
+                {
+                    "entrant1Characters": [
+                        "falco"
+                    ],
+                    "entrant1Result": "win",
+                    "entrant2Characters": [
+                        "peach"
+                    ],
+                    "entrant2Result": "lose",
+                    "gameNumber": 3,
+                    "other": null,
+                    "stage": "Yoshi's Story"
+                }
+            ],
+            "entrant1NextSetID": "4",
+            "other": null,
+            "phaseID": "208f7746431d04c1f1b8bb9ba71fb023",
+            "roundID": null,
+            "setFormat": "bestof5",
+            "setID": "1",
+            "status": "completed",
+            "entrant2NextSetID": ""
+        }
+    ],
+    "entrants": [
+        {
+            "entrantID": "Alice",
+            "entrantTag": "Alice",
+            "entrantTeam": "None",
+            "finalPlacement": 1,
+            "initialSeed": 1,
+            "other": null,
+            "personalInformation": [
+                {
+                    "country": "USA",
+                    "gender": null,
+                    "entrant_language": null,
+                    "name": "Alice Alice",
+                    "other": null,
+                    "pronouns": null,
+                    "entrantTag": "Alice",
+                    "entrant_prefix": null
+                }
+            ]
+        },
+        {
+            "entrantID": "Dave",
+            "entrantTag": "Dave",
+            "entrantTeam": "None",
+            "finalPlacement": 3,
+            "initialSeed": 2,
+            "other": null,
+            "personalInformation": [
+                {
+                    "country": "USA",
+                    "gender": null,
+                    "entrant_language": null,
+                    "name": "Dave McDave",
+                    "other": null,
+                    "pronouns": null,
+                    "entrantTag": "Dave",
+                    "entrant_prefix": null
+                }
+            ]
+        },
+        {
+            "entrantID": "Felicia",
+            "entrantTag": "Felicia",
+            "entrantTeam": "None",
+            "finalPlacement": 2,
+            "initialSeed": 4,
+            "other": null,
+            "personalInformation": [
+                {
+                    "country": "USA",
+                    "gender": null,
+                    "entrant_language": null,
+                    "name": "Felicia Felicia",
+                    "other": null,
+                    "pronouns": null,
+                    "entrantTag": "Felicia",
+                    "entrant_prefix": null
+                }
+            ]
+        },
+        {
+            "entrantID": "Zay",
+            "entrantTag": "Zay",
+            "entrantTeam": "None",
+            "finalPlacement": 3,
+            "initialSeed": 4,
+            "other": null,
+            "personalInformation": [
+                {
+                    "country": "USA",
+                    "gender": null,
+                    "entrant_language": null,
+                    "name": "Zay Zay",
+                    "other": null,
+                    "pronouns": null,
+                    "entrantTag": "Zay",
+                    "entrant_prefix": null
+                }
+            ]
+        }
+    ]
+}

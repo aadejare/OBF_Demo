@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil,json
 
-from obfmodels import PROJECT_PATH, db, SetObf
+from obfmodels import  db, SetObf
 #Called MatchSet because SET is a reserved word in Python
 
 
@@ -132,7 +132,32 @@ class MatchSet():
 		del set_obj['tableid'] # Delete table id since it's not needed
 		del set_obj['tournamentID'] # Delete tournament ID since it's not needed
 		return set_obj
-	def exportphasejson(self):
+	def exportsets(self):
+		"""Export Set info into a dictonary
+	
+		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
+		:type: str
+		:return: dict
+		"""	
+		setlist=[] #Yes list of set is called set list
+		from playhouse.shortcuts import model_to_dict, dict_to_model
+		try:
+			db.connect()
+		except Exception as e:
+			db.close()
+			db.connect()
+		query = SetObf.select().where(\
+					SetObf.tournamentID==self.tournamentID)
+		if query.exists():
+			query = SetObf.select().where(\
+					SetObf.tournamentID==self.tournamentID).order_by(SetObf.setID)
+		for ix in query:
+			set_obj =  model_to_dict(ix)
+			del set_obj['tableid'], set_obj['tournamentID'] # Delete table id since it's not needed
+			setlist.append(set_obj)
+		return setlist
+
+	def exportphasejsonstring(self):
 		"""Export Player info into a json string
 		
 		:param none: 

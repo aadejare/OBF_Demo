@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil,json
 
-from obfmodels import PROJECT_PATH, db, TournamentObf
-	
+from obfmodels import db, TournamentObf
+# To change databse alter, changedb
 	
 class Tournament():
 	"""
@@ -10,13 +10,13 @@ class Tournament():
 	and python for strings, it helps to remove confusion
 	"""
 	# Initialize the data
-	def __init__(self,tournamentTitle=None,description=None,definitions=None,\
+	def __init__(self,tournamentTitle=None,SetGameResult=None,description=None,\
 				tournamentID=None, obfversion=None):
 		# To save the data we will create a string from the list (array)
 		# Encoded in ASCII and separated by commas
 		self.tournamentTitle = tournamentTitle
 		self.obfversion = obfversion
-		self.definitions=definitions
+		self.SetGameResult=SetGameResult
 		self.tournamentID=tournamentID
 		self.description=description
 	def savetournament(self,savedata='update'):
@@ -39,7 +39,7 @@ class Tournament():
 				TourInfo = TournamentObf.update(
 						tournamentTitle=self.tournamentTitle,
 						obfversion=self.obfversion,
-						definitions=json.dumps(self.definitions),
+						SetGameResult=json.dumps(self.SetGameResult),
 						tournamentID=self.tournamentID,
 						description=self.description
 
@@ -55,7 +55,7 @@ class Tournament():
 			TourInfo = TournamentObf.create(
 					tournamentTitle=self.tournamentTitle,
 					obfversion=self.obfversion,
-					definitions=json.dumps(self.definitions),
+					SetGameResult=json.dumps(self.SetGameResult),
 					tournamentID=self.tournamentID,
 					description=self.description,
 					tableid = secrets.token_hex(nbytes=16)
@@ -81,11 +81,36 @@ class Tournament():
 
 		if query.exists():
 			query = TournamentObf.select(\
-			TournamentObf.tournamentTitle, TournamentObf.description, TournamentObf.definitions,\
+			TournamentObf.tournamentTitle, TournamentObf.description, TournamentObf.SetGameResult,\
 				TournamentObf.obfversion, TournamentObf.tournamentID
 			).where(\
 					TournamentObf.tournamentID==self.tournamentID).get()
 			return query
+		else:
+			return None
+	def gettournamentID(self):
+		"""Get game information
+		
+		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
+		:type: str
+		:return: boolean
+		"""	
+		if self.tournamentTitle is None:
+			return -1
+		try:
+			db.connect()
+		except Exception as e:
+			db.close()
+			db.connect()
+		query = TournamentObf.select().where(\
+					TournamentObf.tournamentTitle==self.tournamentTitle)
+
+		if query.exists():
+			query = TournamentObf.select(TournamentObf.tournamentTitle,\
+			TournamentObf.tournamentID).where(\
+					TournamentObf.tournamentTitle==self.tournamentTitle)
+			self.tournamentID = list(query)[-1].tournamentID
+			return 0
 		else:
 			return None
 	def exporttournament(self):
@@ -98,9 +123,10 @@ class Tournament():
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		tourn_obj =  model_to_dict(self.gettournament())
 		tourn_obj['title'] = tourn_obj['tournamentTitle']
-		tourn_obj['definitions'] = json.loads(tourn_obj['definitions'])
-		del tourn_obj['tournamentTitle']
-		del tourn_obj['tableid']
+		tourn_obj['SetGameResult'] = json.loads(tourn_obj['SetGameResult'])
+		tourn_obj['version'] = tourn_obj['obfversion']
+		#Delete the following since we don't need them anymore
+		del tourn_obj['tournamentTitle'], tourn_obj['obfversion'], tourn_obj['tableid']
 		return tourn_obj
 	def exporttournamentjson(self):
 		"""Export Player info into a json string

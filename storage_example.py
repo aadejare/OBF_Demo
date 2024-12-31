@@ -6,41 +6,41 @@ import re, os, sys, time, shutil, json
 import Event, MatchSet, Entrant, Game, Phase, Tournament
 
 data = None
-with open('example.json', 'r') as file:
+with open('example_new3.json', 'r') as file:
 	data = json.load(file)
+print(data)
 
 print("Tournament Data: \n\n")
-tourn_data = Tournament.Tournament(tournamentTitle='First Tourney', obfversion='1.0',
-			description='My first tourney!', definitions= {
-    "SetGameResult": {
-      "enum": [ "win", "lose", "draw", "dq" ]
-    } }, tournamentID='60a4345c2fccc4a1fcd5a0fa2b241f4c')
+tourn_data = Tournament.Tournament(tournamentTitle=data['description'], obfversion=data['version'],
+			description=data['description'], SetGameResult=data['SetGameResult'])
 print (tourn_data.tournamentID)
-print(tourn_data.savetournament())
+print(tourn_data.savetournament('new'))
 print('Now new')
 print(tourn_data.savetournament('update'))
 print (tourn_data.tournamentID)
 print(tourn_data.exporttournamentjson())
-print(data)
 	
-	
-print ('Next Phase Data: \n\n')
-phase_data = Phase.Phase( phaseID= 'fd1a7398c11d729cc9dc3fbe67342700',
-						phaseStructure='Final')
-phase_data.savephase(savedata='new')	
 
-				
 print("Event data:  \n\n")
 event_obf = data['event']
 
-event_data = Event.Event(eventDate=event_obf['date'], gameName=event_obf['gameName'],\
+event_data = Event.Event(eventDate=event_obf['eventDate'], gameName=event_obf['gameName'],\
 					ruleset=event_obf['ruleset'],originURL=event_obf['originURL'],\
 					name=event_obf['name'], numberEntrants = event_obf['numberEntrants'],
 					tournamentStructure= event_obf['tournamentStructure'],
-					tournamentID= tourn_data.tournamentID,
-					phaseID = phase_data.phaseID)
-event_data.saveeventinfo('new')
+					tournamentID= tourn_data.tournamentID,)
+event_data.saveevent('new')
 
+
+	
+print ('Next Phase Data: \n\n')
+for ix in data['phases']:
+	phase_data = Phase.Phase( phaseID= ix['phaseID'],
+							phaseStructure=ix['phaseStructure'],
+							name=event_data.name)
+	phase_data.savephase(savedata='new')	
+
+				
 print('Set data: \n\n')
 for i in range(0, len(data['sets'])):
 	set_data_parse = data['sets'][i]
@@ -56,6 +56,7 @@ for i in range(0, len(data['sets'])):
 			phaseID=phase_data.phaseID,
 			setID =set_data_parse['setID'],
 			tournamentID=tourn_data.tournamentID)
+	print(set_data_parse['setID'])
 	set_data.saveset('new')
 	print("THIS IS SET ID: " + str(set_data.setID))
 	game_data_set = set_data_parse['games']
@@ -84,6 +85,6 @@ for i in range(0, len(data['entrants'])):
 					personalInformation =entrant_parse['personalInformation'],
 					tournamentID = tourn_data.tournamentID )
 	print(entrant_Data.entrantTag)
-	entrant_Data.saveentrantinfo('update')
-# 	print(entrant_Data.exportentrants())
+	entrant_Data.saveentrant('update')
+	print(entrant_Data.exportentrants())
 # 	

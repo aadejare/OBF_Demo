@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil, json
-from obfmodels import PROJECT_PATH, db, EntrantObf, PersonalInformationObf
+from obfmodels import db, EntrantObf, PersonalInformationObf
 from PersonalInformation import PersonalInformation
 
 class Entrant():
@@ -18,7 +18,7 @@ class Entrant():
 		self.tournamentID = tournamentID
     
 
-	def saveentrantinfo(self,savedata='update'):
+	def saveentrant(self,savedata='update'):
 		"""Save player information
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -54,8 +54,8 @@ class Entrant():
 				other=pi_dict['other'],
 				entrant_language =pi_dict['language'],
 				entrantTag=self.entrantTag)
-				if PI_Data.savepersonalinformationinfo('new') == -1:
-					PI_Data.savepersonalinformationinfo() 
+				if PI_Data.savepersonalinformation('new') == -1:
+					PI_Data.savepersonalinformation() 
 				EInfo = EntrantObf.update(
 					entrantID = self.entrantID,
 					entrantTag = self.entrantTag,
@@ -87,8 +87,8 @@ class Entrant():
 			other=pi_dict['other'],
 			entrant_language =pi_dict['language'],
 			entrantTag=self.entrantTag)
-			if PI_Data.savepersonalinformationinfo('new') == -1:
-				PI_Data.savepersonalinformationinfo() 
+			if PI_Data.savepersonalinformation('new') == -1:
+				PI_Data.savepersonalinformation() 
 			EInfo = EntrantObf.create(
 						entrantID = self.entrantID,
 						entrantTag = self.entrantTag,
@@ -101,7 +101,7 @@ class Entrant():
 							)
 			db.close()
 		return 1
-	def getentrantinfo(self):
+	def getentrant(self):
 		"""Get player information
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -123,7 +123,7 @@ class Entrant():
 			return query
 		else:
 			return None
-	def exportentrantinfo(self):
+	def exportentrant(self):
 		"""Export Player info into a dictonary
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -131,19 +131,19 @@ class Entrant():
 		:return: dict
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
-		entrant_obj =  model_to_dict(self.getentrantinfo())
+		entrant_obj =  model_to_dict(self.getentrant())
 		del entrant_obj['tableid'] # Delete table id since it's not needed
 		del entrant_obj['tournamentID'] # Delete tournament ID since it's not needed
 
 		return entrant_obj
-	def exportentrantinfojson(self):
+	def exportentrantjsonstring(self):
 		"""Export Player info into a json string
 		
 		:param none: 
 		:type: str
 		:return: str
 		"""	
-		entrant_obj = self.exportentrantinfo()
+		entrant_obj = self.exportentrant()
 		return json.dumps(str({'Entrant':entrant_obj}))
 	def exportentrants(self):
 		"""Export the list of entrants and their personal infomation
@@ -186,7 +186,6 @@ class Entrant():
 			del entrant_subquery_obj['tableid'] # Delete table id since it's not needed
 			del entrant_subquery_obj['tournamentID'] # Delete set ID since it's not needed
 			#Add in personal information
-			entrant_subquery_obj['personalInformation'] = pi_export
+			entrant_subquery_obj['personalInformation'] = [pi_export]
 			entrantslist.append(entrant_subquery_obj)
-			print("WWWW")
 		return entrantslist

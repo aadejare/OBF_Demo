@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil, json
-from obfmodels import PROJECT_PATH, db, EventObf
+from obfmodels import db, EventObf
 
 class Event():
 	# Initialize the data
 	def __init__(self,eventDate=None,gameName=None,name=None,\
-				numberEntrants=None, originURL=None, phaseID=None,\
-				phases = None, ruleset=None,
+				numberEntrants=None, originURL=None, ruleset=None,\
 				tournamentStructure=None, 
 				tournamentID = None, other=None):
 		self.eventDate = eventDate
@@ -14,14 +13,12 @@ class Event():
 		self.name = name
 		self.numberEntrants = numberEntrants
 		self.originURL = originURL
-		self.phaseID = phaseID
-		self.phases = phases
 		self.ruleset = ruleset
 		self.tournamentStructure = tournamentStructure
 		self.tournamentID = tournamentID
 		self.other = other
 
-	def saveeventinfo(self,savedata='update'):
+	def saveevent(self,savedata='update'):
 		"""Save event information
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -49,8 +46,6 @@ class Event():
 					name = self.name,
 					numberEntrants = self.numberEntrants,
 					originURL = self.originURL,
-					phaseID = self.phaseID,
-					phases = self.phases,
 					ruleset = self.ruleset,
 					tournamentStructure = self.tournamentStructure,
 					other = self.other,
@@ -68,8 +63,6 @@ class Event():
 				name = self.name,
 				numberEntrants = self.numberEntrants,
 				originURL = self.originURL,
-				phaseID = self.phaseID,
-				phases = self.phases,
 				ruleset = self.ruleset,
 				tournamentStructure = self.tournamentStructure,
 				other = self.other,
@@ -78,7 +71,7 @@ class Event():
 							)
 			db.close()
 		return 1
-	def geteventinfo(self):
+	def getevent(self):
 		"""Get player information
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -90,15 +83,15 @@ class Event():
 		except Exception as e:
 			db.close()
 			db.connect()
-		query = EventObf.select().where(EventObf.name == self.name)
+		query = EventObf.select().where(EventObf.name==self.name, \
+					EventObf.tournamentID==self.tournamentID)
 		if query.exists():
 			query = EventObf.select().where(\
 					EventObf.name==self.name, EventObf.tournamentID==self.tournamentID).get()
-			del query['tableid']
 			return query
 		else:
 			return None
-	def exporteventinfo(self):
+	def exportevent(self):
 		"""Export Event info into a dictonary
 		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -106,17 +99,17 @@ class Event():
 		:return: dict
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
-		event_obj =  model_to_dict(self.geteventinfo())
+		event_obj =  model_to_dict(self.getevent())
 		
-# 		del event_obj['tableID'] # Delete table ID since it's not needed
+		del event_obj['tableid'] # Delete table ID since it's not needed
 		return event_obj
-	def exporteventinfojson(self):
+	def exporteventjson(self):
 		"""Export Event info into a json string
 		
 		:param none: 
 		:type: str
 		:return: str
 		"""	
-		event_obj = self.exporteventinfo()
+		event_obj = self.exportevent()
 		return json.dumps(str({'Event':event_obj}))
 		

@@ -10,9 +10,15 @@ from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 # PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../', 'configfiles'))
-PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', ''))
-db = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
-                       pragmas={'journal_mode': 'wal'})
+# make db proxy 
+# Link https://docs.peewee-orm.com/en/latest/peewee/database.html#deferring-initialization
+# db =  DatabaseProxy()  
+# PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', ''))
+# db = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
+#                        pragmas={'journal_mode': 'wal'})
+#
+db = DatabaseProxy()
+
 class ModelBase(peewee.Model):
 	"""Generic model database for Peewee"""
 	class Meta:
@@ -55,8 +61,6 @@ class EventObf(BaseModel):
 	numberEntrants = IntegerField(column_name='numberEntrants', null=True)
 	originURL = TextField(column_name='originURL', null=True)
 	other = BlobField(null=True)
-	phaseID = TextField(column_name='phaseID', null=True, unique=True)
-	phases = BlobField(null=True)
 	ruleset = TextField(null=True)
 	tableid = TextField(unique=True, primary_key=True)
 	tournamentID = TextField()
@@ -100,6 +104,8 @@ class PhaseObf(BaseModel):
 	other = BlobField(null=True)
 	phaseID = TextField(column_name='phaseID', unique=True)
 	phaseStructure = TextField(column_name='phaseStructure', null=True)
+	name = TextField(column_name='name', null=True)
+	eventID = TextField(column_name='eventID', null=True)
 	tableid = TextField(unique=True, primary_key=True)
 
 	class Meta:
@@ -121,7 +127,7 @@ class SetObf(BaseModel):
 	phaseID = TextField(column_name='phaseID', null=True)
 	roundID = TextField(column_name='roundID', null=True)
 	setFormat = TextField(column_name='setFormat', null=True)
-	setID = TextField(column_name='setID', unique=True)
+	setID = TextField(column_name='setID')
 	status = TextField(null=True)
 	tableid = TextField(unique=True, primary_key=True)
 	entrant2NextSetID = TextField(column_name='entrant2NextSetID', null=True)
@@ -133,7 +139,7 @@ class SetObf(BaseModel):
 
 class TournamentObf(BaseModel):
 	tournamentTitle = TextField(column_name='tournamentTitle')
-	definitions = TextField()
+	SetGameResult = TextField()
 	description = TextField()
 	obfversion = TextField(null=True,
 	constraints=[Check("obfversion\\ in\\ \\('v0\\.1',\\ 'v0\\.2'\\)")])

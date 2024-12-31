@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re, os, sys, time, shutil,json
 
-from obfmodels import PROJECT_PATH, db, GameObf, CharactersObf
+from obfmodels import db, GameObf, CharactersObf
 
 	
 class Game():
@@ -143,7 +143,7 @@ class Game():
 		del game_obj['tableid'] # Delete table id since it's not needed
 		del game_obj['setID'] # Delete set ID since it's not needed
 		return game_obj
-	def exportgamejson(self):
+	def exportgamejsonstring(self):
 		"""Export Player info into a json string
 		
 		:param none: 
@@ -170,6 +170,8 @@ class Game():
 		if query.exists():
 			query = GameObf.select(GameObf.gameNumber, GameObf.setID).where(\
 					 GameObf.setID==self.setID).order_by(GameObf.gameNumber)
+		else:
+			return gameslist
 		for ix in query:
 			game_subquery = GameObf.select(\
 			GameObf.gameNumber, GameObf.entrant1Characters, GameObf.entrant2Characters,\
@@ -194,5 +196,5 @@ class Game():
 			del game_subquery_obj['tableid'] # Delete table id since it's not needed
 			del game_subquery_obj['setID'] # Delete set ID since it's not needed
 			gameslist.append(game_subquery_obj)
-			db.close()
+		db.close()
 		return gameslist
