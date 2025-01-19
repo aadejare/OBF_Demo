@@ -5,18 +5,36 @@ Retrieve all the data in the proper format.
 """
 import re, os, sys, time, shutil, json
 
-from obfmodels import db
+import config
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 import Event, MatchSet, Entrant, Game, Phase, Tournament
 
 class OBFSQL():
-	def __init__(self,path=None, database=None, params={}):
-		PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', ''))
+	def __init__(self,dbtype = None, path=None, database=None, **kwargs):
+		self.db = None
 		from playhouse.db_url import connect
-		db_sqlite = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
-							   pragmas={'journal_mode': 'wal'})
-		db.initialize(db_sqlite)
+		if type(dbtype)!= str:
+			return None
+		if dbtype.lower() in ['sqlite', 'sqlite3','lite','default']:
+# 			db_sqlite = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
+# 							   pragmas={'journal_mode': 'wal'})
+			config.db.initialize(SqliteExtDatabase(path + database, regexp_function=True, timeout=3,
+							   pragmas={'journal_mode': 'wal'}))
+			self.db = config.db
+		if dbtype.lower() in ['postgres', 'post','postgresql']:
+			config.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+						host=kwargs['host'],
+                        password=kwargs['pw'],
+                        port=kwargs['port']))
+			self.db = config.db
+		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
+			config.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+						host=kwargs['host'],
+                        password=kwargs['pw']))
+			self.db = config.db
+		else:
+			self.db = None
 
 	def retrieve(self, tournamentID=None, tournamentTitle=None, eventName=None):
 		"""

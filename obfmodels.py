@@ -3,6 +3,7 @@
 import os
 import peewee
 from peewee import *
+import config
 
 #Must modify this information before production
 #Password must be modified.  
@@ -17,12 +18,7 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 # db = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
 #                        pragmas={'journal_mode': 'wal'})
 #
-db = DatabaseProxy()
-
-class ModelBase(peewee.Model):
-	"""Generic model database for Peewee"""
-	class Meta:
-		database = db
+db = config.db
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
