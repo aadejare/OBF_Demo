@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-##Build using Bootstrap, Flask, Flask-WTForms
 import re, os, sys, time, shutil,json
 
 from obfmodels import db, PhaseObf

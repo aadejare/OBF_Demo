@@ -1,0 +1,18 @@
+[project]
+name = "obfsql"
+version = "0.1.0"
+description = "An Open Bracket Formet to SQL and vise versa package"
+authors = [
+    {name = "AJ Adejare"}
+]
+license = {text = "AGPL"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "peewee @ git+https://github.com/coleifer/peewee.git"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
