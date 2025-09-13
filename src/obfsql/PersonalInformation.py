@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ##Build using Bootstrap, Flask, Flask-WTForms
-import re, os, sys, time, shutil, json
+import json
 ##This contains the demographics of the user which can be used to help customize the experience.
 ##Redundancies are made to ensure the reusability of the package
 from obfmodels import db, PersonalInformationObf
@@ -78,14 +78,21 @@ class PersonalInformation():
 		except Exception as e:
 			db.close()
 			db.connect()
-		query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.entrantTag == self.entrantTag)
-		if query.exists():
+		# query = PersonalInformationObf.select().where(\
+		# 			PersonalInformationObf.entrantTag == self.entrantTag)
+		# if query.exists():
+		# 	query = PersonalInformationObf.select().where(\
+		# 			PersonalInformationObf.entrantTag == self.entrantTag).get()
+		# 	db.close()
+		# 	return query
+		# else:
+		# 	return None
+		try:
 			query = PersonalInformationObf.select().where(\
 					PersonalInformationObf.entrantTag == self.entrantTag).get()
 			db.close()
 			return query
-		else:
+		except:
 			return None
 	def exportpersonalinformation(self):
 		"""Export Player info into a dictonary
@@ -95,7 +102,7 @@ class PersonalInformation():
 		:return: dict
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
-		player_obj =  model_to_dict(self.getpersonalinformationinfo())
+		player_obj =  model_to_dict(self.getpersonalinformation())
 		del player_obj['tableid'] # Delete table id since it's not needed
 		player_obj['prefix'] = player_obj['entrant_prefix']
 		player_obj['language'] = player_obj['entrant_language']
@@ -108,6 +115,6 @@ class PersonalInformation():
 		:type: str
 		:return: str
 		"""	
-		player_obj = self.exportpersonalinformationinfo()
+		player_obj = self.getpersonalinformation()
 		return json.dumps(str({'personalInformation':player_obj}))
 		

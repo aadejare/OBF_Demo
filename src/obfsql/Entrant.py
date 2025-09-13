@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import re, os, sys, time, shutil, json
+import json
 from obfmodels import db, EntrantObf, PersonalInformationObf
 from PersonalInformation import PersonalInformation
 
@@ -170,7 +170,7 @@ class Entrant():
 		looper = -1
 		for ix in query:
 			looper+=1
-			print("Hello: " + str(ix.entrantTag))
+# 			print("Hello: " + str(ix.entrantTag))
 			entrant_subquery = EntrantObf.select( EntrantObf.entrantID,
 				EntrantObf.entrantTag,EntrantObf.finalPlacement,\
 				EntrantObf.initialSeed, 

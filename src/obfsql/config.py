@@ -6,6 +6,6 @@ import peewee
 #Password must be modified.  
 
 # Link https://docs.peewee-orm.com/en/latest/peewee/database.html#deferring-initialization
-
 db = peewee.Proxy()
+
 PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', ''))

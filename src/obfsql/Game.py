@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import re, os, sys, time, shutil,json
+import json
 
 from obfmodels import db, GameObf, CharactersObf
 

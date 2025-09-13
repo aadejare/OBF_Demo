@@ -1,12 +1,12 @@
 # Script to communicate OBS to SQLITE database
 
-import os
 import peewee
 from peewee import *
-import config
-
 #Must modify this information before production
 #Password must be modified.  
+import logging 
+
+log = logging.getLogger(__name__)
 
 from playhouse.sqlite_ext import SqliteExtDatabase
 
@@ -18,8 +18,47 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 # db = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
 #                        pragmas={'journal_mode': 'wal'})
 #
-db = config.db
 
+# Code rip from Tim Leher
+# https://timlehr.com/2018/01/lazy-database-initialization-with-peewee-proxy-subclasses/
+# class CustomProxy(DatabaseProxy):
+# 	"""Simple :obj:`peewee.proxy` subclass that tries to initialize the DB proxy on-demand.
+# 	"""
+# 	def __getattr__(self, attr):
+# 		""" If a member of the proxy is being accessed, 
+# 		and it's not yet initialized (obj == None), try initialization.
+# 		"""
+# 		if self.obj is None:
+# 			self.initialize_proxy()
+# 		return super(Proxy, self).__getattribute__(attr)
+# 		
+# 	def initialize_proxy(self, dbtype = None, path=None, database=None,**kwargs):
+# 		"""Helper function that initializes the proxy with credentials read from somewhere else (e.g. config-file). 
+# 		For demonstration purposes, they are hardcoded though. :) 
+# 		"""
+# 		log.debug("Access to uninitialized DB proxy requested. Try initialization ...")
+# 		if type(dbtype)!= str:
+# 			return None
+# 		if dbtype.lower() in ['sqlite', 'sqlite3','lite','default']:
+# 		# 			db_sqlite = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
+# 		# 							   pragmas={'journal_mode': 'wal'})
+# 			return self.initialize(SqliteExtDatabase(path + database, regexp_function=True, timeout=3,
+# 			pragmas={'journal_mode': 'wal'}))
+# # 			self.db = config.db
+# 		if dbtype.lower() in ['postgres', 'post','postgresql']:
+# 			return self.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+# 			host=kwargs['host'],
+# 			password=kwargs['pw'],
+# 			port=kwargs['port']))
+# # 			self.db = config.db
+# 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
+# 			return self.initialize(MySQLDatabase(database, user=kwargs['user'], 
+# 			host=kwargs['host'],
+# 			password=kwargs['pw']))
+# # 			self.db = config.db
+# # 		return self.db
+# db = CustomProxy()
+db = DatabaseProxy()
 class UnknownField(object):
     def __init__(self, *_, **__): pass
 

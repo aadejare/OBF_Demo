@@ -1,40 +1,55 @@
 #!/usr/bin/env python
 """
-OBFSQL.py
+Bracket.py
 Retrieve all the data in the proper format.
 """
 import re, os, sys, time, shutil, json
 
-import config
-from playhouse.sqlite_ext import SqliteExtDatabase
+PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', ''))
 
+from playhouse.sqlite_ext import SqliteExtDatabase
+sys.path.insert(1,PROJECT_PATH)
+from obfmodels import db as obfdb
 import Event, MatchSet, Entrant, Game, Phase, Tournament
 
-class OBFSQL():
-	def __init__(self,dbtype = None, path=None, database=None, **kwargs):
-		self.db = None
-		from playhouse.db_url import connect
+
+
+
+
+class Bracket():
+	def __init__(self):
+		self.db = obfdb
+			
+	def connect(self,dbtype = None, path=None, database=None, **kwargs):
+		"""
+		Connect the object to a database to access the bracket information
+		dbtype :str: Type of database to use
+		path :str: Path to the database (either url or directory path)
+		database :str: Database name
+				
+		"""
+# 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
 			return None
 		if dbtype.lower() in ['sqlite', 'sqlite3','lite','default']:
 # 			db_sqlite = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
 # 							   pragmas={'journal_mode': 'wal'})
-			config.db.initialize(SqliteExtDatabase(path + database, regexp_function=True, timeout=3,
+			self.db.initialize(SqliteExtDatabase(path + database, regexp_function=True, timeout=3,
 							   pragmas={'journal_mode': 'wal'}))
-			self.db = config.db
+# 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			config.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
 						host=kwargs['host'],
                         password=kwargs['pw'],
                         port=kwargs['port']))
-			self.db = config.db
+# 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			config.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
 						host=kwargs['host'],
                         password=kwargs['pw']))
-			self.db = config.db
+# 			self.db = config.db
 		else:
-			self.db = None
+			pass
 
 	def retrieve(self, tournamentID=None, tournamentTitle=None, eventName=None):
 		"""
@@ -159,4 +174,3 @@ class OBFSQL():
 			entrant_Data.saveentrant('update')
 # 			print(entrant_Data.exportentrants())
 		return 0
-# 	

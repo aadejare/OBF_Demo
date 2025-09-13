@@ -3,7 +3,7 @@
 Retrieval_example.py
 Retrieve all the data in the proper format.
 """
-import re, os, sys, time, shutil, json
+import os, json
 
 #Import OBFmodel
 from obfmodels import db

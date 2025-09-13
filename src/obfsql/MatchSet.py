@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import re, os, sys, time, shutil,json
+import json
 
 from obfmodels import  db, SetObf
 #Called MatchSet because SET is a reserved word in Python
