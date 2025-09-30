@@ -40,6 +40,8 @@ class Event():
 					EventObf.name==self.name, EventObf.tournamentID==self.tournamentID)\
 					.get()
 				tablehash = query.tableid
+				if type(self.other) == dict:
+					self.other = json.dumps(self.other)
 				EInfo = EventObf.update(
 					eventDate = self.eventDate,
 					gameName = self.gameName,
@@ -100,7 +102,7 @@ class Event():
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		event_obj =  model_to_dict(self.getevent())
-		
+		event_obj['other'] = json.loads(event_obj['other'])
 		del event_obj['tableid'] # Delete table ID since it's not needed
 		return event_obj
 	def exporteventjson(self):

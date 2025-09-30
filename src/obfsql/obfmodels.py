@@ -177,7 +177,7 @@ class TournamentObf(BaseModel):
 	SetGameResult = TextField()
 	description = TextField()
 	obfversion = TextField(null=True,
-	constraints=[Check("obfversion\\ in\\ \\('v0\\.1',\\ 'v0\\.2'\\)")])
+	constraints=[Check("obfversion in ('v0.1','v0.2','v1.0', '0.1','0.2','1.0')")])
 	tournamentID = TextField(column_name='tournamentID',unique=True)
 	tableid = TextField(unique=True, primary_key=True)
 	

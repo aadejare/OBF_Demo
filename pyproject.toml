@@ -9,13 +9,15 @@ license = {text = "AGPL"}
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "peewee @ git+https://github.com/coleifer/peewee.git"
+    "peewee >= 3.15.3",
+    "pymysql >= 1.1.1",
+    "psycopg>=3.2",
+    "psycopg[pool]>=3.2"
 ]
 
+[tool.setuptools.packages.find]
+where =["srcl"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-src_paths = ["src", "test"]

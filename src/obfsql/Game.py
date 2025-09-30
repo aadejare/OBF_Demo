@@ -37,6 +37,8 @@ class Game():
 					## Get the hashes
 				entrant1hash = query.entrant1Characters
 				entrant2hash = query.entrant2Characters
+				if type(self.other) == dict:
+					self.other = json.dumps(self.other)
 				GameInfo = GameObf.update(
 						entrant1Characters=entrant1hash,
 						entrant2Characters=entrant2hash,
@@ -68,6 +70,8 @@ class Game():
 			import secrets
 			entrant1hash = secrets.token_hex(nbytes=16)
 			entrant2hash = secrets.token_hex(nbytes=16)
+			if type(self.other) == dict:
+				self.other = json.dumps(self.other)
 			GameInfo = GameObf.create(
 						entrant1Characters=entrant1hash,
 						entrant2Characters=entrant2hash,
@@ -140,6 +144,7 @@ class Game():
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		game_obj =  model_to_dict(self.getgame())
+		game_obj['other'] = json.loads(game_obj['other'])
 		del game_obj['tableid'] # Delete table id since it's not needed
 		del game_obj['setID'] # Delete set ID since it's not needed
 		return game_obj

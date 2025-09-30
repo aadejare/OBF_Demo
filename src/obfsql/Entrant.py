@@ -56,6 +56,8 @@ class Entrant():
 				entrantTag=self.entrantTag)
 				if PI_Data.savepersonalinformation('new') == -1:
 					PI_Data.savepersonalinformation() 
+				if type(self.other) == dict:
+					self.other = json.dumps(self.other)
 				EInfo = EntrantObf.update(
 					entrantID = self.entrantID,
 					entrantTag = self.entrantTag,
@@ -89,6 +91,8 @@ class Entrant():
 			entrantTag=self.entrantTag)
 			if PI_Data.savepersonalinformation('new') == -1:
 				PI_Data.savepersonalinformation() 
+			if type(self.other) == dict:
+				self.other = json.dumps(self.other)
 			EInfo = EntrantObf.create(
 						entrantID = self.entrantID,
 						entrantTag = self.entrantTag,
@@ -132,6 +136,7 @@ class Entrant():
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		entrant_obj =  model_to_dict(self.getentrant())
+		entrant_obj['other'] = json.loads(entrant_obj['other'] )
 		del entrant_obj['tableid'] # Delete table id since it's not needed
 		del entrant_obj['tournamentID'] # Delete tournament ID since it's not needed
 
@@ -177,15 +182,11 @@ class Entrant():
 				EntrantObf.entrantTeam, EntrantObf.other\
 				).where(EntrantObf.entrantTag==ix.entrantTag,
 					EntrantObf.tournamentID == ix.tournamentID).get()
-			PI_Data = PersonalInformationObf.select()\
-				.where(PersonalInformationObf.entrantTag==ix.entrantTag).get()
-			pi_export =  model_to_dict(PI_Data)
+			PI_Data = PersonalInformation(entrant_tag =ix.entrantTag)
+			pi_export =  PI_Data.exportpersonalinformation()
 ### Because PI closes the database we need to open the db again
-			del pi_export['tableid']
 			entrant_subquery_obj =  model_to_dict(entrant_subquery)
-			del entrant_subquery_obj['tableid'] # Delete table id since it's not needed
-			del entrant_subquery_obj['tournamentID'] # Delete set ID since it's not needed
-			#Add in personal information
+			entrant_subquery_obj['other'] = json.loads(entrant_subquery_obj['other'])
 			entrant_subquery_obj['personalInformation'] = [pi_export]
 			entrantslist.append(entrant_subquery_obj)
 		return entrantslist

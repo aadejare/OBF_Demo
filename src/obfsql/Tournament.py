@@ -24,29 +24,24 @@ class Tournament():
 			return -1
 		try:
 			db.connect()
-		except Exception as e:
+		except:
 			db.close()
 			db.connect()
-		query = TournamentObf.select().where(\
-					TournamentObf.tournamentID==self.tournamentID)
-		if query.exists():
-			if savedata == 'new':
-				return -1
-			else:
-				query = TournamentObf.select().where(\
-					TournamentObf.tournamentID==self.tournamentID).get()
-					## Get the hashes
+		if savedata == 'update':
+			try:
 				TourInfo = TournamentObf.update(
 						tournamentTitle=self.tournamentTitle,
 						obfversion=self.obfversion,
 						SetGameResult=json.dumps(self.SetGameResult),
 						tournamentID=self.tournamentID,
 						description=self.description
-
 				).where(TournamentObf.tournamentID==self.tournamentID)
 				TourInfo.execute()
 				db.close()
 				return 1
+			except:
+				# Failed to fetch
+				return 0
 		else:
 			import secrets
 # If there's no tournament ID and it's a new save, then we generate one for them
@@ -76,17 +71,14 @@ class Tournament():
 		except Exception as e:
 			db.close()
 			db.connect()
-		query = TournamentObf.select().where(\
-					TournamentObf.tournamentID==self.tournamentID)
-
-		if query.exists():
+		try:
 			query = TournamentObf.select(\
 			TournamentObf.tournamentTitle, TournamentObf.description, TournamentObf.SetGameResult,\
 				TournamentObf.obfversion, TournamentObf.tournamentID
 			).where(\
 					TournamentObf.tournamentID==self.tournamentID).get()
 			return query
-		else:
+		except:
 			return None
 	def gettournamentID(self):
 		"""Get game information
@@ -102,16 +94,13 @@ class Tournament():
 		except Exception as e:
 			db.close()
 			db.connect()
-		query = TournamentObf.select().where(\
-					TournamentObf.tournamentTitle==self.tournamentTitle)
-
-		if query.exists():
+		try:
 			query = TournamentObf.select(TournamentObf.tournamentTitle,\
 			TournamentObf.tournamentID).where(\
 					TournamentObf.tournamentTitle==self.tournamentTitle)
 			self.tournamentID = list(query)[-1].tournamentID
 			return 0
-		else:
+		except:
 			return None
 	def exporttournament(self):
 		"""Export Set info into a dictonary

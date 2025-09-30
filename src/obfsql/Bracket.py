@@ -51,6 +51,26 @@ class Bracket():
 		else:
 			pass
 
+	def create_tables(self):
+		"""
+		Create the table for the data if it does not exist
+		"""
+		from obfmodels import EventObf, SetObf, EntrantObf, GameObf, PhaseObf
+		from obfmodels import TournamentObf, PersonalInformationObf,CharactersObf
+		import traceback
+		try:
+			with self.db:
+				tables = [EventObf, SetObf, EntrantObf, GameObf, PhaseObf,TournamentObf,PersonalInformationObf,CharactersObf]
+				for ig in tables:
+					# print(str(ig))
+					self.db.create_tables([ig])
+			# del EventObf, SetObf, EntrantObf, GameObf, PhaseObf, TournamentObf, PersonalInformationObf,CharactersObf
+		except Exception as e:
+				print(traceback.format_exc())
+				print(e)
+				return 1
+		return 0
+
 	def retrieve(self, tournamentID=None, tournamentTitle=None, eventName=None):
 		"""
 		Retrive the Tournament from the SQL Database and returns object
@@ -102,9 +122,18 @@ class Bracket():
 		if type(bracket) == str:
 			bracket = json.loads(bracket)
 		if 'tournamentID' not in bracket:
-			print("Not here")
-			return None
-		tourn_bracket = Tournament.Tournament(tournamentTitle=bracket['description'],\
+			bracket['tournamentID'] = None
+			# print("Not here")
+			# return None
+		if 'SetGameResult' not in bracket:
+				bracket['SetGameResult'] = [ "win", "lose", "draw", "dq" ]
+		if 'version' not in bracket:
+				bracket[ "version"] = "v1.0"
+		if 'description' not in bracket:
+				bracket['description'] = "No description"
+		if 'title' not in bracket:
+				bracket['title'] = 'No title'
+		tourn_bracket = Tournament.Tournament(tournamentTitle=bracket['title'],\
 			tournamentID=bracket['tournamentID'], obfversion=bracket['version'],\
 			description=bracket['description'], SetGameResult=bracket['SetGameResult'])
 		tourn_bracket.savetournament('new')
@@ -123,13 +152,21 @@ class Bracket():
 						tournamentID= tourn_bracket.tournamentID,)
 			event_bracket.saveevent('new')
 # 			print ('Next Phase Data: \n\n')
-		for ix in bracket['phases']:
-			phase_bracket = Phase.Phase( phaseID= ix['phaseID'],
-									phaseStructure=ix['phaseStructure'],
-									name=event_bracket.name)
-			phase_bracket.savephase(savedata='new')	
+			if 'phases' in bracket:
+				for ix in bracket['phases']:
+					phase_bracket = Phase.Phase( phaseID= ix['phaseID'],
+											phaseStructure=ix['phaseStructure'],
+											name=event_bracket.name)
+					phase_bracket.savephase(savedata='new')
+			else:
+				phase_bracket = Phase.Phase( phaseID= None,
+											phaseStructure=None,
+											name=event_bracket.name)
 		for i in range(0, len(bracket['sets'])):
 			set_bracket_parse = bracket['sets'][i]
+			# print(set_bracket_parse)
+			if 'setFormat' not in set_bracket_parse:
+				set_bracket_parse['setFormat'] = None
 			set_bracket = MatchSet.MatchSet(entrant1ID=set_bracket_parse['entrant1ID'],\
 					entrant2ID=set_bracket_parse['entrant2ID'], status=set_bracket_parse['status'], \
 					entrant1Result=set_bracket_parse['entrant1Result'], \

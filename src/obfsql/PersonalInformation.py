@@ -31,6 +31,8 @@ class PersonalInformation():
 		except Exception as e:
 			db.close()
 			db.connect()
+		if type(self.other) == dict:
+			self.other = json.dumps(self.other)
 		query = PersonalInformationObf.select().where(\
 					PersonalInformationObf.entrantTag==self.entrantTag)
 		if query.exists():
@@ -107,6 +109,7 @@ class PersonalInformation():
 		player_obj['prefix'] = player_obj['entrant_prefix']
 		player_obj['language'] = player_obj['entrant_language']
 		del player_obj['entrant_prefix'], player_obj['entrant_language']
+		player_obj['other'] = json.loads(player_obj['other'])
 		return player_obj
 	def exportpersonalinformationjsonstring(self):
 		"""Export Player info into a json string

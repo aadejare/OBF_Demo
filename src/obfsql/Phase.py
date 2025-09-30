@@ -29,6 +29,8 @@ class Phase():
 			if savedata == 'new':
 				return -1
 			else:
+				if type(self.other) == dict:
+					self.other = json.dumps(self.other)
 				PPhase = PhaseObf.update(
 					phaseID = self.phaseID,
 					phaseStructure = self.phaseStructure ,
@@ -40,6 +42,8 @@ class Phase():
 				db.close()
 				return 1
 		else:
+			if type(self.other) == dict:
+				self.other = json.dumps(self.other)
 			PPhase = PhaseObf(
 					phaseID = self.phaseID,
 					phaseStructure = self.phaseStructure ,
@@ -82,6 +86,7 @@ class Phase():
 		del phase_obj['tableid'], phase_obj['name'] # Delete table id since it's not needed
 		## For now we will delete eventID but plan for it in the future
 		del phase_obj['eventID']
+		phase_obj['other'] = json.loads(phase_obj['other'])
 		return phase_obj
 	def exportphases(self):
 		"""Export the list of phases
@@ -107,6 +112,7 @@ class Phase():
 			del phase_obj['tableid'], phase_obj['name'] # Delete table id since it's not needed
 			## For now we will delete eventID but plan for it in the future
 			del phase_obj['eventID']
+			phase_obj['other'] = json.loads(phase_obj['other'])
 			phaseslist.append(phase_obj)
 		return phaseslist				
 		

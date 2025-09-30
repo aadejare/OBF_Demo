@@ -49,6 +49,8 @@ class MatchSet():
 					SetObf.setID==self.setID, 
 					SetObf.tournamentID==self.tournamentID).get()
 				tablehash = query.tableid
+				if type(self.other) == dict:
+					self.other = json.dumps(self.other)
 				SETInfo = SetObf.update(
 					setID=self.setID,
 					entrant1ID=self.entrant1ID,
@@ -76,6 +78,8 @@ class MatchSet():
 		else:
 			import secrets
 			sethash = secrets.token_hex(nbytes=16)
+			if type(self.other) == dict:
+				self.other = json.dumps(self.other)
 			SETInfo = SetObf(
 					setID=self.setID,
 					entrant1ID=self.entrant1ID,
@@ -129,6 +133,7 @@ class MatchSet():
 		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		set_obj =  model_to_dict(self.getset())
+		set_obj['other'] = json.loads(set_obj['other'])
 		del set_obj['tableid'] # Delete table id since it's not needed
 		del set_obj['tournamentID'] # Delete tournament ID since it's not needed
 		return set_obj
@@ -153,6 +158,7 @@ class MatchSet():
 					SetObf.tournamentID==self.tournamentID).order_by(SetObf.setID)
 		for ix in query:
 			set_obj =  model_to_dict(ix)
+			set_obj['other'] = json.loads(set_obj['other'])
 			del set_obj['tableid'], set_obj['tournamentID'] # Delete table id since it's not needed
 			setlist.append(set_obj)
 		return setlist
