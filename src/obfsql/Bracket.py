@@ -43,7 +43,7 @@ class Bracket:
 			)
 		# 			self.db = config.db
 		if dbtype.lower() in ["postgres", "post", "postgresql"]:
-			cself.db.initialize(
+			self.db.initialize(
 				PostgresqlDatabase(
 					database,
 					user=kwargs["user"],
