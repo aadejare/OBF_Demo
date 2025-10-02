@@ -5,3 +5,4 @@ obfsql.db-wal
 obfsql.db-shm
 obfsql.db-shm
 /archive
+.zed/settings.json
