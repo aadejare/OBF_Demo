@@ -6,18 +6,13 @@ from obfmodels import  db, SetObf
 
 
 class MatchSet():
-	"""
-	This is the class that stores and retrieves set data.
-	Note: becuase "Set" is a reserved word in Python, the function is called MatchSet.
-	It is still set in Open Bracket Format
-	"""
 	# Initialize the data
 	def __init__(self,setID=None, entrant1ID=None,entrant2ID=None, status=None,\
 				entrant1Result=None,entrant2Result=None,\
 				entrant1Score=None, entrant2Score=None,
 				entrant1NextSetID=None, entrant2NextSetID=None,
 				entrant1PrevSetID=None, entrant2PrevSetID=None,
-				setFormat=None, phaseID=None,roundID=None, games=None,
+				setFormat=None, phaseID=None,roundID=None, games=None, 
 				tournamentID=None, other=None):
 		self.setID = setID #Assume that SetID is unique
 		self.entrant1ID=entrant1ID
@@ -51,7 +46,7 @@ class MatchSet():
 				return -1
 			else:
 				query = SetObf.select().where(\
-					SetObf.setID==self.setID,
+					SetObf.setID==self.setID, 
 					SetObf.tournamentID==self.tournamentID).get()
 				tablehash = query.tableid
 				if type(self.other) == dict:
@@ -111,11 +106,11 @@ class MatchSet():
 		return 1
 	def getset(self):
 		"""Get phase information
-
+		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""
+		"""	
 		try:
 			db.connect()
 		except Exception as e:
@@ -131,11 +126,11 @@ class MatchSet():
 			return None
 	def exportset(self):
 		"""Export Set info into a dictonary
-
+	
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: dict
-		"""
+		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		set_obj =  model_to_dict(self.getset())
 		set_obj['other'] = json.loads(set_obj['other'])
@@ -144,11 +139,11 @@ class MatchSet():
 		return set_obj
 	def exportsets(self):
 		"""Export Set info into a dictonary
-
+	
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: dict
-		"""
+		"""	
 		setlist=[] #Yes list of set is called set list
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		try:
@@ -170,10 +165,10 @@ class MatchSet():
 
 	def exportphasejsonstring(self):
 		"""Export Player info into a json string
-
-		:param none:
+		
+		:param none: 
 		:type: str
 		:return: str
-		"""
+		"""	
 		set_obj = self.exportset()
 		return json.dumps(str({'Set':set_obj}))

@@ -3,11 +3,10 @@ import json
 
 from obfmodels import db, TournamentObf
 # To change databse alter, changedb
-
+	
 class Tournament():
 	"""
-	This is the class that stores and retrieves Tournament data.
-	Note: tournamentTitle is the substitue for title in OBF. Since title is a reserved word in SQL
+	tournamentTitle is the substitue for title in OBF. Since title is a reserved word in SQ
 	and python for strings, it helps to remove confusion
 	"""
 	# Initialize the data
@@ -60,11 +59,11 @@ class Tournament():
 		return 1
 	def gettournament(self):
 		"""Get game information
-
+		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""
+		"""	
 		if self.tournamentID is None:
 			return -1
 		try:
@@ -83,11 +82,11 @@ class Tournament():
 			return None
 	def gettournamentID(self):
 		"""Get game information
-
+		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""
+		"""	
 		if self.tournamentTitle is None:
 			return -1
 		try:
@@ -105,11 +104,11 @@ class Tournament():
 			return None
 	def exporttournament(self):
 		"""Export Set info into a dictonary
-
+	
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: dict
-		"""
+		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		tourn_obj =  model_to_dict(self.gettournament())
 		tourn_obj['title'] = tourn_obj['tournamentTitle']
@@ -120,10 +119,10 @@ class Tournament():
 		return tourn_obj
 	def exporttournamentjson(self):
 		"""Export Player info into a json string
-
-		:param none:
+		
+		:param none: 
 		:type: str
 		:return: str
-		"""
+		"""	
 		tourn_obj = self.exporttournament()
 		return json.dumps(str({'Tournament':tourn_obj}))

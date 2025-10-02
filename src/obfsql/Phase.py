@@ -4,9 +4,6 @@ import re, os, sys, time, shutil,json
 from obfmodels import db, PhaseObf
 
 class Phase():
-	"""
-	This is the class that stores and retrieves Phase data.
-	"""
 	# Initialize the data
 	def __init__(self,phaseID=None,phaseStructure=None, eventID=None,name=None,other=None):
 		self.phaseID = phaseID
@@ -16,11 +13,11 @@ class Phase():
 		self.other = other
 	def savephase(self,savedata='update'):
 		"""Save phase information
-
+		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""
+		"""	
 		try:
 			db.connect()
 		except Exception as e:
@@ -59,11 +56,11 @@ class Phase():
 		return 1
 	def getphase(self):
 		"""Get phase information
-
+		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""
+		"""	
 		try:
 			db.connect()
 		except Exception as e:
@@ -79,11 +76,11 @@ class Phase():
 			return None
 	def exportphase(self):
 		"""Export Phase info into a dictonary
-
+		
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: dict
-		"""
+		"""	
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		phase_obj =  model_to_dict(self.getphase())
 		del phase_obj['tableid'], phase_obj['name'] # Delete table id since it's not needed
@@ -104,7 +101,7 @@ class Phase():
 		except Exception as e:
 			db.close()
 			db.connect()
-		# For right now querying on event name, later will switch to eventID
+		# For right now querying on event name, later will switch to eventID	
 		query = PhaseObf.select().where(\
 					PhaseObf.name==self.name)
 		if query.exists():
@@ -117,15 +114,15 @@ class Phase():
 			del phase_obj['eventID']
 			phase_obj['other'] = json.loads(phase_obj['other'])
 			phaseslist.append(phase_obj)
-		return phaseslist
-
+		return phaseslist				
+		
 		return phase_obj
 	def exportphasejsonstring(self):
 		"""Export Player info into a json string
-
-		:param none:
+		
+		:param none: 
 		:type: str
 		:return: str
-		"""
+		"""	
 		phase_obj = self.exportphase()
 		return json.dumps(str({'Phase':phase_obj}))
