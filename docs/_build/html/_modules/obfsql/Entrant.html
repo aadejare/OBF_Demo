@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>obfsql.Entrant &#8212; OBFSQL 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for obfsql.Entrant</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">obfmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">EntrantObf</span><span class="p">,</span> <span class="n">PersonalInformationObf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PersonalInformation</span><span class="w"> </span><span class="kn">import</span> <span class="n">PersonalInformation</span>
+
+
+<div class="viewcode-block" id="Entrant">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Entrant.Entrant">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Entrant</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that stores and retrieves Entrant data.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># Initialize the data</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">entrantTag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">entrantID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">finalPlacement</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">initialSeed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">personalInformation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">tournamentID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">entrantTeam</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span>
+		<span class="n">other</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+	<span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span> <span class="o">=</span> <span class="n">entrantTag</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrantID</span> <span class="o">=</span> <span class="n">entrantID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrantTeam</span> <span class="o">=</span> <span class="n">entrantTeam</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">finalPlacement</span> <span class="o">=</span> <span class="n">finalPlacement</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">initialSeed</span> <span class="o">=</span> <span class="n">initialSeed</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="n">other</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">personalInformation</span> <span class="o">=</span> <span class="n">personalInformation</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">=</span> <span class="n">tournamentID</span>
+
+<div class="viewcode-block" id="Entrant.saveentrant">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Entrant.Entrant.saveentrant">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">saveentrant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">savedata</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Save player information</span>
+
+<span class="sd">		:param savedata: Method of saving the data new is new data, rewrite is rewriting data</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: boolean</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="n">EntrantObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+			<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+			<span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">savedata</span> <span class="o">==</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span>
+				<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># Break the PI data into dictionary form</span>
+				<span class="n">pi_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">personalInformation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+				<span class="c1"># Try and catch for data</span>
+				<span class="n">pifields</span> <span class="o">=</span> <span class="p">[</span>
+					<span class="s2">&quot;name&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;country&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;pronouns&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;tag&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;prefix&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;language&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;other&quot;</span><span class="p">,</span>
+				<span class="p">]</span>
+				<span class="k">for</span> <span class="n">pif</span> <span class="ow">in</span> <span class="n">pifields</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">pif</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pi_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+						<span class="n">pi_dict</span><span class="p">[</span><span class="n">pif</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+				<span class="c1">## Save PI first then Entrant data</span>
+				<span class="n">PI_Data</span> <span class="o">=</span> <span class="n">PersonalInformation</span><span class="p">(</span>
+					<span class="n">name</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+					<span class="n">country</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">],</span>
+					<span class="n">gender</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">],</span>
+					<span class="n">prefix</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;prefix&quot;</span><span class="p">],</span>
+					<span class="n">pronouns</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;pronouns&quot;</span><span class="p">],</span>
+					<span class="n">other</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;other&quot;</span><span class="p">],</span>
+					<span class="n">entrant_language</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">],</span>
+					<span class="n">entrantTag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+				<span class="p">)</span>
+				<span class="k">if</span> <span class="n">PI_Data</span><span class="o">.</span><span class="n">savepersonalinformation</span><span class="p">(</span><span class="s2">&quot;new&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+					<span class="n">PI_Data</span><span class="o">.</span><span class="n">savepersonalinformation</span><span class="p">()</span>
+				<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span>
+				<span class="n">EInfo</span> <span class="o">=</span> <span class="n">EntrantObf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+					<span class="n">entrantID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantID</span><span class="p">,</span>
+					<span class="n">entrantTag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+					<span class="n">entrantTeam</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantTeam</span><span class="p">,</span>
+					<span class="n">finalPlacement</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">finalPlacement</span><span class="p">,</span>
+					<span class="n">initialSeed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initialSeed</span><span class="p">,</span>
+					<span class="n">other</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">,</span>
+					<span class="n">tournamentID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+				<span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+				<span class="p">)</span>
+				<span class="n">EInfo</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+				<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+				<span class="k">return</span> <span class="mi">1</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+
+			<span class="c1"># Break the PI data into dictionary form</span>
+			<span class="n">pi_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">personalInformation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="c1">## Save PI first then Entrant data</span>
+			<span class="n">pifields</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="s2">&quot;name&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;country&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;pronouns&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;tag&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;prefix&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;language&quot;</span><span class="p">,</span>
+				<span class="s2">&quot;other&quot;</span><span class="p">,</span>
+			<span class="p">]</span>
+			<span class="k">for</span> <span class="n">pif</span> <span class="ow">in</span> <span class="n">pifields</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">pif</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pi_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+					<span class="n">pi_dict</span><span class="p">[</span><span class="n">pif</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="n">PI_Data</span> <span class="o">=</span> <span class="n">PersonalInformation</span><span class="p">(</span>
+				<span class="n">name</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+				<span class="n">country</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">],</span>
+				<span class="n">gender</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">],</span>
+				<span class="n">prefix</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;prefix&quot;</span><span class="p">],</span>
+				<span class="n">pronouns</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;pronouns&quot;</span><span class="p">],</span>
+				<span class="n">other</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;other&quot;</span><span class="p">],</span>
+				<span class="n">entrant_language</span><span class="o">=</span><span class="n">pi_dict</span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">],</span>
+				<span class="n">entrantTag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+			<span class="p">)</span>
+			<span class="k">if</span> <span class="n">PI_Data</span><span class="o">.</span><span class="n">savepersonalinformation</span><span class="p">(</span><span class="s2">&quot;new&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+				<span class="n">PI_Data</span><span class="o">.</span><span class="n">savepersonalinformation</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span>
+			<span class="n">EInfo</span> <span class="o">=</span> <span class="n">EntrantObf</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+				<span class="n">entrantID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantID</span><span class="p">,</span>
+				<span class="n">entrantTag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+				<span class="n">entrantTeam</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrantTeam</span><span class="p">,</span>
+				<span class="n">finalPlacement</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">finalPlacement</span><span class="p">,</span>
+				<span class="n">initialSeed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initialSeed</span><span class="p">,</span>
+				<span class="n">other</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">,</span>
+				<span class="n">tournamentID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+				<span class="n">tableid</span><span class="o">=</span><span class="n">secrets</span><span class="o">.</span><span class="n">token_hex</span><span class="p">(</span><span class="n">nbytes</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span>
+			<span class="p">)</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+		<span class="k">return</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="Entrant.getentrant">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Entrant.Entrant.getentrant">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">getentrant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Get player information</span>
+
+<span class="sd">		:param savedata: Method of saving the data new is new data, rewrite is rewriting data</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: boolean</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="n">EntrantObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+			<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+			<span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+			<span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+				<span class="n">EntrantObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+				<span class="o">.</span><span class="n">where</span><span class="p">(</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+				<span class="p">)</span>
+				<span class="o">.</span><span class="n">get</span><span class="p">()</span>
+			<span class="p">)</span>
+			<span class="k">return</span> <span class="n">query</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Entrant.exportentrant">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Entrant.Entrant.exportentrant">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">exportentrant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Export Player info into a dictonary</span>
+
+<span class="sd">		:param savedata: Method of saving the data new is new data, rewrite is rewriting data</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: dict</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="kn">from</span><span class="w"> </span><span class="nn">playhouse.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_to_dict</span><span class="p">,</span> <span class="n">dict_to_model</span>
+
+		<span class="n">entrant_obj</span> <span class="o">=</span> <span class="n">model_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getentrant</span><span class="p">())</span>
+		<span class="n">entrant_obj</span><span class="p">[</span><span class="s2">&quot;other&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">entrant_obj</span><span class="p">[</span><span class="s2">&quot;other&quot;</span><span class="p">])</span>
+		<span class="k">del</span> <span class="n">entrant_obj</span><span class="p">[</span><span class="s2">&quot;tableid&quot;</span><span class="p">]</span>  <span class="c1"># Delete table id since it&#39;s not needed</span>
+		<span class="k">del</span> <span class="n">entrant_obj</span><span class="p">[</span><span class="s2">&quot;tournamentID&quot;</span><span class="p">]</span>  <span class="c1"># Delete tournament ID since it&#39;s not needed</span>
+
+		<span class="k">return</span> <span class="n">entrant_obj</span></div>
+
+
+<div class="viewcode-block" id="Entrant.exportentrantjsonstring">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Entrant.Entrant.exportentrantjsonstring">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">exportentrantjsonstring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Export Player info into a json string</span>
+
+<span class="sd">		:param none:</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: str</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">entrant_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exportentrant</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">str</span><span class="p">({</span><span class="s2">&quot;Entrant&quot;</span><span class="p">:</span> <span class="n">entrant_obj</span><span class="p">}))</span></div>
+
+
+<div class="viewcode-block" id="Entrant.exportentrants">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Entrant.Entrant.exportentrants">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">exportentrants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Export the list of entrants and their personal infomation</span>
+<span class="sd">		:param none:</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="kn">from</span><span class="w"> </span><span class="nn">playhouse.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_to_dict</span>
+
+		<span class="n">entrantslist</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+			<span class="n">EntrantObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+			<span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+			<span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">)</span>
+		<span class="p">)</span>
+		<span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>  <span class="c1"># Check to see if it&#39;s none</span>
+			<span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+				<span class="n">EntrantObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+				<span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+				<span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">)</span>
+			<span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="k">return</span> <span class="kc">None</span>
+		<span class="n">looper</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+		<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+			<span class="n">looper</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="c1"># 			print(&quot;Hello: &quot; + str(ix.entrantTag))</span>
+			<span class="n">entrant_subquery</span> <span class="o">=</span> <span class="p">(</span>
+				<span class="n">EntrantObf</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantID</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">finalPlacement</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">initialSeed</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTeam</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">other</span><span class="p">,</span>
+				<span class="p">)</span>
+				<span class="o">.</span><span class="n">where</span><span class="p">(</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">entrantTag</span> <span class="o">==</span> <span class="n">ix</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">==</span> <span class="n">ix</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+				<span class="p">)</span>
+				<span class="o">.</span><span class="n">get</span><span class="p">()</span>
+			<span class="p">)</span>
+			<span class="n">PI_Data</span> <span class="o">=</span> <span class="n">PersonalInformation</span><span class="p">(</span><span class="n">entrant_tag</span><span class="o">=</span><span class="n">ix</span><span class="o">.</span><span class="n">entrantTag</span><span class="p">)</span>
+			<span class="n">pi_export</span> <span class="o">=</span> <span class="n">PI_Data</span><span class="o">.</span><span class="n">exportpersonalinformation</span><span class="p">()</span>
+			<span class="c1">### Because PI closes the database we need to open the db again</span>
+			<span class="n">entrant_subquery_obj</span> <span class="o">=</span> <span class="n">model_to_dict</span><span class="p">(</span><span class="n">entrant_subquery</span><span class="p">)</span>
+			<span class="n">entrant_subquery_obj</span><span class="p">[</span><span class="s2">&quot;other&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">entrant_subquery_obj</span><span class="p">[</span><span class="s2">&quot;other&quot;</span><span class="p">])</span>
+			<span class="n">entrant_subquery_obj</span><span class="p">[</span><span class="s2">&quot;personalInformation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">pi_export</span><span class="p">]</span>
+			<span class="n">entrantslist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entrant_subquery_obj</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">entrantslist</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">OBFSQL</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">obfsql</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, AJ Adejare.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

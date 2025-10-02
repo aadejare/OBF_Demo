@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>obfsql package &#8212; OBFSQL 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="obfsql" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="obfsql-package">
+<h1>obfsql package<a class="headerlink" href="#obfsql-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-obfsql.Bracket">
+<span id="obfsql-bracket-module"></span><h2>obfsql.Bracket module<a class="headerlink" href="#module-obfsql.Bracket" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Bracket.Bracket">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Bracket.</span></span><span class="sig-name descname"><span class="pre">Bracket</span></span><a class="reference internal" href="_modules/obfsql/Bracket.html#Bracket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Bracket.Bracket" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class creates and recovers all of the data for a specific tournament/event for Open Bracket Format.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Bracket.Bracket.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Bracket.html#Bracket.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Bracket.Bracket.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Bracket.Bracket.create_tables">
+<span class="sig-name descname"><span class="pre">create_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Bracket.html#Bracket.create_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Bracket.Bracket.create_tables" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Bracket.Bracket.retrieve">
+<span class="sig-name descname"><span class="pre">retrieve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournamentID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentTitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Bracket.html#Bracket.retrieve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Bracket.Bracket.retrieve" title="Link to this definition">¶</a></dt>
+<dd><p>Retrive the Tournament from the SQL Database and returns object
+tournamentID :str: required, tournament ID to locate the tournament
+tournamentTitle :str: optional, tournament title. Note, will select latest tournament with same title
+eventName :str: name of the event to retrieve  Note, will select latest event with same title</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Bracket.Bracket.retrievejson">
+<span class="sig-name descname"><span class="pre">retrievejson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournamentID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentTitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Bracket.html#Bracket.retrievejson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Bracket.Bracket.retrievejson" title="Link to this definition">¶</a></dt>
+<dd><p>Retrive the Tournament from the SQL Database and returns JSON
+tournamentID :str: required, tournament ID to locate the tournament
+tournamentTitle :str: optional, tournament title. Note, will select latest tournament with same title
+eventName :str: name of the event to retrieve  Note, will select latest event with same title</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Bracket.Bracket.store">
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bracket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Bracket.html#Bracket.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Bracket.Bracket.store" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.Characters">
+<span id="obfsql-characters-module"></span><h2>obfsql.Characters module<a class="headerlink" href="#module-obfsql.Characters" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Characters.Character">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Characters.</span></span><span class="sig-name descname"><span class="pre">Character</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrantCharacterName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrantCharacterNameID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Characters.html#Character"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Characters.Character" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves character data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Characters.Character.exportpersonalinformation">
+<span class="sig-name descname"><span class="pre">exportpersonalinformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Characters.html#Character.exportpersonalinformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Characters.Character.exportpersonalinformation" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Characters.Character.exportpersonalinformationjsonstring">
+<span class="sig-name descname"><span class="pre">exportpersonalinformationjsonstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Characters.html#Character.exportpersonalinformationjsonstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Characters.Character.exportpersonalinformationjsonstring" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Characters.Character.getpersonalinformation">
+<span class="sig-name descname"><span class="pre">getpersonalinformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Characters.html#Character.getpersonalinformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Characters.Character.getpersonalinformation" title="Link to this definition">¶</a></dt>
+<dd><p>Get player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Characters.Character.savecharacter">
+<span class="sig-name descname"><span class="pre">savecharacter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Characters.html#Character.savecharacter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Characters.Character.savecharacter" title="Link to this definition">¶</a></dt>
+<dd><p>Save player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.Entrant">
+<span id="obfsql-entrant-module"></span><h2>obfsql.Entrant module<a class="headerlink" href="#module-obfsql.Entrant" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Entrant.Entrant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Entrant.</span></span><span class="sig-name descname"><span class="pre">Entrant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entrantTag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrantID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finalPlacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialSeed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">personalInformation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrantTeam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Entrant.html#Entrant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Entrant.Entrant" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves Entrant data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Entrant.Entrant.exportentrant">
+<span class="sig-name descname"><span class="pre">exportentrant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Entrant.html#Entrant.exportentrant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Entrant.Entrant.exportentrant" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Entrant.Entrant.exportentrantjsonstring">
+<span class="sig-name descname"><span class="pre">exportentrantjsonstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Entrant.html#Entrant.exportentrantjsonstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Entrant.Entrant.exportentrantjsonstring" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Entrant.Entrant.exportentrants">
+<span class="sig-name descname"><span class="pre">exportentrants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Entrant.html#Entrant.exportentrants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Entrant.Entrant.exportentrants" title="Link to this definition">¶</a></dt>
+<dd><p>Export the list of entrants and their personal infomation
+:param none:
+:type: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Entrant.Entrant.getentrant">
+<span class="sig-name descname"><span class="pre">getentrant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Entrant.html#Entrant.getentrant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Entrant.Entrant.getentrant" title="Link to this definition">¶</a></dt>
+<dd><p>Get player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Entrant.Entrant.saveentrant">
+<span class="sig-name descname"><span class="pre">saveentrant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Entrant.html#Entrant.saveentrant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Entrant.Entrant.saveentrant" title="Link to this definition">¶</a></dt>
+<dd><p>Save player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.Event">
+<span id="obfsql-event-module"></span><h2>obfsql.Event module<a class="headerlink" href="#module-obfsql.Event" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Event.Event">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Event.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gameName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberEntrants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">originURL</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ruleset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentStructure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Event.html#Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Event.Event" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves Event data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Event.Event.exportevent">
+<span class="sig-name descname"><span class="pre">exportevent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Event.html#Event.exportevent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Event.Event.exportevent" title="Link to this definition">¶</a></dt>
+<dd><p>Export Event info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Event.Event.exporteventjson">
+<span class="sig-name descname"><span class="pre">exporteventjson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Event.html#Event.exporteventjson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Event.Event.exporteventjson" title="Link to this definition">¶</a></dt>
+<dd><p>Export Event info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Event.Event.getevent">
+<span class="sig-name descname"><span class="pre">getevent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Event.html#Event.getevent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Event.Event.getevent" title="Link to this definition">¶</a></dt>
+<dd><p>Get player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Event.Event.saveevent">
+<span class="sig-name descname"><span class="pre">saveevent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Event.html#Event.saveevent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Event.Event.saveevent" title="Link to this definition">¶</a></dt>
+<dd><p>Save event information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.Game">
+<span id="obfsql-game-module"></span><h2>obfsql.Game module<a class="headerlink" href="#module-obfsql.Game" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Game.Game">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Game.</span></span><span class="sig-name descname"><span class="pre">Game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gameNumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1Characters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2Characters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1Result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2Result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Game.html#Game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Game.Game" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves Game data.
+It will also retrieve Character data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Game.Game.exportgame">
+<span class="sig-name descname"><span class="pre">exportgame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Game.html#Game.exportgame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Game.Game.exportgame" title="Link to this definition">¶</a></dt>
+<dd><p>Export Set info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Game.Game.exportgamejsonstring">
+<span class="sig-name descname"><span class="pre">exportgamejsonstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Game.html#Game.exportgamejsonstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Game.Game.exportgamejsonstring" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Game.Game.exportgames">
+<span class="sig-name descname"><span class="pre">exportgames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Game.html#Game.exportgames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Game.Game.exportgames" title="Link to this definition">¶</a></dt>
+<dd><p>Export the list of games
+:param none:
+:type: str
+:return: list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Game.Game.getgame">
+<span class="sig-name descname"><span class="pre">getgame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Game.html#Game.getgame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Game.Game.getgame" title="Link to this definition">¶</a></dt>
+<dd><p>Get game information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Game.Game.savegame">
+<span class="sig-name descname"><span class="pre">savegame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Game.html#Game.savegame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Game.Game.savegame" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.MatchSet">
+<span id="obfsql-matchset-module"></span><h2>obfsql.MatchSet module<a class="headerlink" href="#module-obfsql.MatchSet" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.MatchSet.MatchSet">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.MatchSet.</span></span><span class="sig-name descname"><span class="pre">MatchSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">setID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1Result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2Result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1Score</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2Score</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1NextSetID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2NextSetID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant1PrevSetID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant2PrevSetID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setFormat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phaseID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roundID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">games</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/MatchSet.html#MatchSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.MatchSet.MatchSet" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves set data.
+Note: becuase “Set” is a reserved word in Python, the function is called MatchSet.
+It is still set in Open Bracket Format</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.MatchSet.MatchSet.exportphasejsonstring">
+<span class="sig-name descname"><span class="pre">exportphasejsonstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/MatchSet.html#MatchSet.exportphasejsonstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.MatchSet.MatchSet.exportphasejsonstring" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.MatchSet.MatchSet.exportset">
+<span class="sig-name descname"><span class="pre">exportset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/MatchSet.html#MatchSet.exportset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.MatchSet.MatchSet.exportset" title="Link to this definition">¶</a></dt>
+<dd><p>Export Set info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.MatchSet.MatchSet.exportsets">
+<span class="sig-name descname"><span class="pre">exportsets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/MatchSet.html#MatchSet.exportsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.MatchSet.MatchSet.exportsets" title="Link to this definition">¶</a></dt>
+<dd><p>Export Set info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.MatchSet.MatchSet.getset">
+<span class="sig-name descname"><span class="pre">getset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/MatchSet.html#MatchSet.getset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.MatchSet.MatchSet.getset" title="Link to this definition">¶</a></dt>
+<dd><p>Get phase information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.MatchSet.MatchSet.saveset">
+<span class="sig-name descname"><span class="pre">saveset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/MatchSet.html#MatchSet.saveset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.MatchSet.MatchSet.saveset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.OBFData">
+<span id="obfsql-obfdata-module"></span><h2>obfsql.OBFData module<a class="headerlink" href="#module-obfsql.OBFData" title="Link to this heading">¶</a></h2>
+<p>OBFData.py
+Atomically call differnet parts of the OBF Data within the database</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Entrant">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_Entrant</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Entrant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Entrant" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Entrant</span></code></p>
+<p>This is the class focues on the indiviual Entrant field within OBF.
+It will only retrieve/store data within the designated Entrant.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Entrant.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Entrant.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Entrant.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Entrant.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Entrant.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Entrant.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Event">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_Event</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Event" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></p>
+<p>This is the class focues on the indiviual Event field within OBF.
+It will only retrieve/store data within the designated Event.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Event.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Event.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Event.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Event.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Event.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Event.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Game">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_Game</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Game" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Game</span></code></p>
+<p>This is the class focues on the indiviual Game field within OBF.
+It will only retrieve/store data within the designated Game.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Game.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Game.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Game.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Game.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Game.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Game.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_MatchSet">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_MatchSet</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_MatchSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_MatchSet" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MatchSet</span></code></p>
+<p>This is the class focues on the indiviual Set field within OBF.
+It will only retrieve/store data within the designated Set.
+Note: becuase “Set” is a reserved word in Python, the function is called MatchSet.
+It is still set in Open Bracket Format</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_MatchSet.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_MatchSet.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_MatchSet.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_MatchSet.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_MatchSet.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_MatchSet.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist
+For Set OBF we put it as MatchSet since Set is a reserved word in Python</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_PersonalInformation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_PersonalInformation</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_PersonalInformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_PersonalInformation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PersonalInformation</span></code></p>
+<p>This is the class focues on the indiviual Personal Information field within OBF.
+It will only retrieve/store data within the designated Personal Information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_PersonalInformation.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_PersonalInformation.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_PersonalInformation.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_PersonalInformation.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_PersonalInformation.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_PersonalInformation.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Phase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_Phase</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Phase" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Phase</span></code></p>
+<p>This is the class focues on the indiviual Phase field within OBF.
+It will only retrieve/store data within the designated Phase.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Phase.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Phase.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Phase.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Phase.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Phase.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Phase.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Tournament">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.OBFData.</span></span><span class="sig-name descname"><span class="pre">OBFData_Tournament</span></span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Tournament"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Tournament" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Tournament</span></code></p>
+<p>This is the class focues on the indiviual Tournament field within OBF.
+It will only retrieve/store data within the designated Tournament.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Tournament.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Tournament.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Tournament.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Connect the object to a database to access the bracket information
+dbtype :str: Type of database to use
+path :str: Path to the database (either url or directory path)
+database :str: Database name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.OBFData.OBFData_Tournament.create_table">
+<span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/OBFData.html#OBFData_Tournament.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.OBFData.OBFData_Tournament.create_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create the table for the data if it does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.PersonalInformation">
+<span id="obfsql-personalinformation-module"></span><h2>obfsql.PersonalInformation module<a class="headerlink" href="#module-obfsql.PersonalInformation" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.PersonalInformation.PersonalInformation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.PersonalInformation.</span></span><span class="sig-name descname"><span class="pre">PersonalInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrant_language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gender</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">country</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pronouns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrantTag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/PersonalInformation.html#PersonalInformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.PersonalInformation.PersonalInformation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves Personal Information data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.PersonalInformation.PersonalInformation.exportpersonalinformation">
+<span class="sig-name descname"><span class="pre">exportpersonalinformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/PersonalInformation.html#PersonalInformation.exportpersonalinformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.PersonalInformation.PersonalInformation.exportpersonalinformation" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.PersonalInformation.PersonalInformation.exportpersonalinformationjsonstring">
+<span class="sig-name descname"><span class="pre">exportpersonalinformationjsonstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/PersonalInformation.html#PersonalInformation.exportpersonalinformationjsonstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.PersonalInformation.PersonalInformation.exportpersonalinformationjsonstring" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.PersonalInformation.PersonalInformation.getpersonalinformation">
+<span class="sig-name descname"><span class="pre">getpersonalinformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/PersonalInformation.html#PersonalInformation.getpersonalinformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.PersonalInformation.PersonalInformation.getpersonalinformation" title="Link to this definition">¶</a></dt>
+<dd><p>Get player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.PersonalInformation.PersonalInformation.savepersonalinformation">
+<span class="sig-name descname"><span class="pre">savepersonalinformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/PersonalInformation.html#PersonalInformation.savepersonalinformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.PersonalInformation.PersonalInformation.savepersonalinformation" title="Link to this definition">¶</a></dt>
+<dd><p>Save player information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.Phase">
+<span id="obfsql-phase-module"></span><h2>obfsql.Phase module<a class="headerlink" href="#module-obfsql.Phase" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Phase.Phase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Phase.</span></span><span class="sig-name descname"><span class="pre">Phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phaseID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phaseStructure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Phase.html#Phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Phase.Phase" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves Phase data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Phase.Phase.exportphase">
+<span class="sig-name descname"><span class="pre">exportphase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Phase.html#Phase.exportphase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Phase.Phase.exportphase" title="Link to this definition">¶</a></dt>
+<dd><p>Export Phase info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Phase.Phase.exportphasejsonstring">
+<span class="sig-name descname"><span class="pre">exportphasejsonstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Phase.html#Phase.exportphasejsonstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Phase.Phase.exportphasejsonstring" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Phase.Phase.exportphases">
+<span class="sig-name descname"><span class="pre">exportphases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Phase.html#Phase.exportphases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Phase.Phase.exportphases" title="Link to this definition">¶</a></dt>
+<dd><p>Export the list of phases
+:param none:
+:type: str
+:return: list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Phase.Phase.getphase">
+<span class="sig-name descname"><span class="pre">getphase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Phase.html#Phase.getphase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Phase.Phase.getphase" title="Link to this definition">¶</a></dt>
+<dd><p>Get phase information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Phase.Phase.savephase">
+<span class="sig-name descname"><span class="pre">savephase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Phase.html#Phase.savephase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Phase.Phase.savephase" title="Link to this definition">¶</a></dt>
+<dd><p>Save phase information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.Tournament">
+<span id="obfsql-tournament-module"></span><h2>obfsql.Tournament module<a class="headerlink" href="#module-obfsql.Tournament" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.Tournament.Tournament">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.Tournament.</span></span><span class="sig-name descname"><span class="pre">Tournament</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournamentTitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetGameResult</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournamentID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obfversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Tournament.html#Tournament"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Tournament.Tournament" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the class that stores and retrieves Tournament data.
+Note: tournamentTitle is the substitue for title in OBF. Since title is a reserved word in SQL
+and python for strings, it helps to remove confusion</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Tournament.Tournament.exporttournament">
+<span class="sig-name descname"><span class="pre">exporttournament</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Tournament.html#Tournament.exporttournament"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Tournament.Tournament.exporttournament" title="Link to this definition">¶</a></dt>
+<dd><p>Export Set info into a dictonary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Tournament.Tournament.exporttournamentjson">
+<span class="sig-name descname"><span class="pre">exporttournamentjson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Tournament.html#Tournament.exporttournamentjson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Tournament.Tournament.exporttournamentjson" title="Link to this definition">¶</a></dt>
+<dd><p>Export Player info into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>none</strong></p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Tournament.Tournament.gettournament">
+<span class="sig-name descname"><span class="pre">gettournament</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Tournament.html#Tournament.gettournament"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Tournament.Tournament.gettournament" title="Link to this definition">¶</a></dt>
+<dd><p>Get game information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Tournament.Tournament.gettournamentID">
+<span class="sig-name descname"><span class="pre">gettournamentID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Tournament.html#Tournament.gettournamentID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Tournament.Tournament.gettournamentID" title="Link to this definition">¶</a></dt>
+<dd><p>Get game information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>savedata</strong> – Method of saving the data new is new data, rewrite is rewriting data</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="obfsql.Tournament.Tournament.savetournament">
+<span class="sig-name descname"><span class="pre">savetournament</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savedata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'update'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/Tournament.html#Tournament.savetournament"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.Tournament.Tournament.savetournament" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-obfsql.config">
+<span id="obfsql-config-module"></span><h2>obfsql.config module<a class="headerlink" href="#module-obfsql.config" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-obfsql.obfmodels">
+<span id="obfsql-obfmodels-module"></span><h2>obfsql.obfmodels module<a class="headerlink" href="#module-obfsql.obfmodels" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.BaseModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#BaseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.BaseModel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.BaseModel.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.BaseModel.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.BaseModel.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;AutoField:</span> <span class="pre">BaseModel.id&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.BaseModel.id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.CharacterObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">CharacterObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#CharacterObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.CharacterObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve character data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.CharacterObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.CharacterObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.CharacterObf.entrantCharacterName">
+<span class="sig-name descname"><span class="pre">entrantCharacterName</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">CharacterObf.entrantCharacterName&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.CharacterObf.entrantCharacterName" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.CharacterObf.entrantCharacterNameID">
+<span class="sig-name descname"><span class="pre">entrantCharacterNameID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">CharacterObf.entrantCharacterNameID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.CharacterObf.entrantCharacterNameID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.CharacterObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;AutoField:</span> <span class="pre">CharacterObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.CharacterObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">EntrantObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#EntrantObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.EntrantObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve entrant data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">EntrantObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.entrantID">
+<span class="sig-name descname"><span class="pre">entrantID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EntrantObf.entrantID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.entrantID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.entrantTag">
+<span class="sig-name descname"><span class="pre">entrantTag</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EntrantObf.entrantTag&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.entrantTag" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.entrantTeam">
+<span class="sig-name descname"><span class="pre">entrantTeam</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EntrantObf.entrantTeam&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.entrantTeam" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.finalPlacement">
+<span class="sig-name descname"><span class="pre">finalPlacement</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntegerField:</span> <span class="pre">EntrantObf.finalPlacement&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.finalPlacement" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.initialSeed">
+<span class="sig-name descname"><span class="pre">initialSeed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntegerField:</span> <span class="pre">EntrantObf.initialSeed&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.initialSeed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.other">
+<span class="sig-name descname"><span class="pre">other</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">EntrantObf.other&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.other" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EntrantObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EntrantObf.tournamentID">
+<span class="sig-name descname"><span class="pre">tournamentID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EntrantObf.tournamentID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EntrantObf.tournamentID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">EventObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#EventObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.EventObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve event data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.EventObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">EventObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.eventDate">
+<span class="sig-name descname"><span class="pre">eventDate</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.eventDate&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.eventDate" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.gameName">
+<span class="sig-name descname"><span class="pre">gameName</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.gameName&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.gameName" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.name&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.numberEntrants">
+<span class="sig-name descname"><span class="pre">numberEntrants</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntegerField:</span> <span class="pre">EventObf.numberEntrants&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.numberEntrants" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.originURL">
+<span class="sig-name descname"><span class="pre">originURL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.originURL&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.originURL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.other">
+<span class="sig-name descname"><span class="pre">other</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">EventObf.other&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.other" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.ruleset">
+<span class="sig-name descname"><span class="pre">ruleset</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.ruleset&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.ruleset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.tournamentID">
+<span class="sig-name descname"><span class="pre">tournamentID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.tournamentID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.tournamentID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.EventObf.tournamentStructure">
+<span class="sig-name descname"><span class="pre">tournamentStructure</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">EventObf.tournamentStructure&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.EventObf.tournamentStructure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">GameObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#GameObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.GameObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve Game data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.GameObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">GameObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.entrant1Characters">
+<span class="sig-name descname"><span class="pre">entrant1Characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">GameObf.entrant1Characters&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.entrant1Characters" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.entrant1Result">
+<span class="sig-name descname"><span class="pre">entrant1Result</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">GameObf.entrant1Result&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.entrant1Result" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.entrant2Characters">
+<span class="sig-name descname"><span class="pre">entrant2Characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">GameObf.entrant2Characters&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.entrant2Characters" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.entrant2Result">
+<span class="sig-name descname"><span class="pre">entrant2Result</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">GameObf.entrant2Result&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.entrant2Result" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.gameNumber">
+<span class="sig-name descname"><span class="pre">gameNumber</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntegerField:</span> <span class="pre">GameObf.gameNumber&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.gameNumber" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.other">
+<span class="sig-name descname"><span class="pre">other</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">GameObf.other&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.other" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.setID">
+<span class="sig-name descname"><span class="pre">setID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">GameObf.setID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.setID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.stage">
+<span class="sig-name descname"><span class="pre">stage</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">GameObf.stage&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.stage" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.GameObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">GameObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.GameObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">PersonalInformationObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#PersonalInformationObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve personal information data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PersonalInformationObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.country">
+<span class="sig-name descname"><span class="pre">country</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.country&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.country" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.entrantTag">
+<span class="sig-name descname"><span class="pre">entrantTag</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.entrantTag&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.entrantTag" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.entrant_language">
+<span class="sig-name descname"><span class="pre">entrant_language</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">PersonalInformationObf.entrant_language&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.entrant_language" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.entrant_prefix">
+<span class="sig-name descname"><span class="pre">entrant_prefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.entrant_prefix&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.entrant_prefix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.gender">
+<span class="sig-name descname"><span class="pre">gender</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.gender&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.gender" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.name&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.other">
+<span class="sig-name descname"><span class="pre">other</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">PersonalInformationObf.other&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.other" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.pronouns">
+<span class="sig-name descname"><span class="pre">pronouns</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.pronouns&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.pronouns" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PersonalInformationObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PersonalInformationObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PersonalInformationObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">PhaseObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#PhaseObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.PhaseObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve phase data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">PhaseObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.eventID">
+<span class="sig-name descname"><span class="pre">eventID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PhaseObf.eventID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.eventID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PhaseObf.name&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.other">
+<span class="sig-name descname"><span class="pre">other</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">PhaseObf.other&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.other" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.phaseID">
+<span class="sig-name descname"><span class="pre">phaseID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PhaseObf.phaseID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.phaseID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.phaseStructure">
+<span class="sig-name descname"><span class="pre">phaseStructure</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PhaseObf.phaseStructure&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.phaseStructure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.PhaseObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">PhaseObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.PhaseObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">SetObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#SetObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.SetObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve set data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.SetObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">SetObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant1ID">
+<span class="sig-name descname"><span class="pre">entrant1ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant1ID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant1ID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant1NextSetID">
+<span class="sig-name descname"><span class="pre">entrant1NextSetID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant1NextSetID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant1NextSetID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant1PrevSetID">
+<span class="sig-name descname"><span class="pre">entrant1PrevSetID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant1PrevSetID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant1PrevSetID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant1Result">
+<span class="sig-name descname"><span class="pre">entrant1Result</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant1Result&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant1Result" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant1Score">
+<span class="sig-name descname"><span class="pre">entrant1Score</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntegerField:</span> <span class="pre">SetObf.entrant1Score&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant1Score" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant2ID">
+<span class="sig-name descname"><span class="pre">entrant2ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant2ID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant2ID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant2NextSetID">
+<span class="sig-name descname"><span class="pre">entrant2NextSetID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant2NextSetID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant2NextSetID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant2PrevSetID">
+<span class="sig-name descname"><span class="pre">entrant2PrevSetID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant2PrevSetID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant2PrevSetID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant2Result">
+<span class="sig-name descname"><span class="pre">entrant2Result</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.entrant2Result&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant2Result" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.entrant2Score">
+<span class="sig-name descname"><span class="pre">entrant2Score</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntegerField:</span> <span class="pre">SetObf.entrant2Score&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.entrant2Score" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.games">
+<span class="sig-name descname"><span class="pre">games</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">SetObf.games&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.games" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.other">
+<span class="sig-name descname"><span class="pre">other</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BlobField:</span> <span class="pre">SetObf.other&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.other" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.phaseID">
+<span class="sig-name descname"><span class="pre">phaseID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.phaseID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.phaseID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.roundID">
+<span class="sig-name descname"><span class="pre">roundID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.roundID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.roundID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.setFormat">
+<span class="sig-name descname"><span class="pre">setFormat</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.setFormat&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.setFormat" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.setID">
+<span class="sig-name descname"><span class="pre">setID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.setID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.setID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.status">
+<span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.status&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.status" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.SetObf.tournamentID">
+<span class="sig-name descname"><span class="pre">tournamentID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">SetObf.tournamentID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.SetObf.tournamentID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">TournamentObf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#TournamentObf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.TournamentObf" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#obfsql.obfmodels.BaseModel" title="obfsql.obfmodels.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>This is the class that leverages SQL to store and retrieve Tournament data as a Peewee ORM class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.DoesNotExist">
+<span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentObfDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.SetGameResult">
+<span class="sig-name descname"><span class="pre">SetGameResult</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">TournamentObf.SetGameResult&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.SetGameResult" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">TournamentObf.description&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.obfversion">
+<span class="sig-name descname"><span class="pre">obfversion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">TournamentObf.obfversion&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.obfversion" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.tableid">
+<span class="sig-name descname"><span class="pre">tableid</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">TournamentObf.tableid&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.tableid" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.tournamentID">
+<span class="sig-name descname"><span class="pre">tournamentID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">TournamentObf.tournamentID&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.tournamentID" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="obfsql.obfmodels.TournamentObf.tournamentTitle">
+<span class="sig-name descname"><span class="pre">tournamentTitle</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;TextField:</span> <span class="pre">TournamentObf.tournamentTitle&gt;</span></em><a class="headerlink" href="#obfsql.obfmodels.TournamentObf.tournamentTitle" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="obfsql.obfmodels.UnknownField">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">obfsql.obfmodels.</span></span><span class="sig-name descname"><span class="pre">UnknownField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/obfsql/obfmodels.html#UnknownField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#obfsql.obfmodels.UnknownField" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-obfsql">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-obfsql" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">OBFSQL</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">obfsql</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">obfsql package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">obfsql</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">obfsql</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, AJ Adejare.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/obfsql.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

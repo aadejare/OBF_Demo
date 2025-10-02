@@ -8,4 +8,4 @@ __all__ = ["Bracket",'Entrant','Event','Game','MatchSet',\
 
 version = 0.1
 
-from .Bracket import Bracket
+# from .Bracket import Bracket

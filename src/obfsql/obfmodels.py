@@ -3,20 +3,20 @@
 import peewee
 from peewee import *
 #Must modify this information before production
-#Password must be modified.  
-import logging 
+#Password must be modified.
+import logging
 
 log = logging.getLogger(__name__)
 
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 # PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../', 'configfiles'))
-# make db proxy 
+# make db proxy
 # Link https://docs.peewee-orm.com/en/latest/peewee/database.html#deferring-initialization
-# db =  DatabaseProxy()  
+# db =  DatabaseProxy()
 # PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', ''))
 # db = SqliteExtDatabase(PROJECT_PATH + '/obfsql.db', regexp_function=True, timeout=3,
-#                        pragmas={'journal_mode': 'wal'})
+#						pragmas={'journal_mode': 'wal'})
 #
 
 # Code rip from Tim Leher
@@ -25,16 +25,16 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 # 	"""Simple :obj:`peewee.proxy` subclass that tries to initialize the DB proxy on-demand.
 # 	"""
 # 	def __getattr__(self, attr):
-# 		""" If a member of the proxy is being accessed, 
+# 		""" If a member of the proxy is being accessed,
 # 		and it's not yet initialized (obj == None), try initialization.
 # 		"""
 # 		if self.obj is None:
 # 			self.initialize_proxy()
 # 		return super(Proxy, self).__getattribute__(attr)
-# 		
+#
 # 	def initialize_proxy(self, dbtype = None, path=None, database=None,**kwargs):
-# 		"""Helper function that initializes the proxy with credentials read from somewhere else (e.g. config-file). 
-# 		For demonstration purposes, they are hardcoded though. :) 
+# 		"""Helper function that initializes the proxy with credentials read from somewhere else (e.g. config-file).
+# 		For demonstration purposes, they are hardcoded though. :)
 # 		"""
 # 		log.debug("Access to uninitialized DB proxy requested. Try initialization ...")
 # 		if type(dbtype)!= str:
@@ -46,13 +46,13 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 # 			pragmas={'journal_mode': 'wal'}))
 # # 			self.db = config.db
 # 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-# 			return self.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+# 			return self.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 # 			host=kwargs['host'],
 # 			password=kwargs['pw'],
 # 			port=kwargs['port']))
 # # 			self.db = config.db
 # 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-# 			return self.initialize(MySQLDatabase(database, user=kwargs['user'], 
+# 			return self.initialize(MySQLDatabase(database, user=kwargs['user'],
 # 			host=kwargs['host'],
 # 			password=kwargs['pw']))
 # # 			self.db = config.db
@@ -60,14 +60,17 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 # db = CustomProxy()
 db = DatabaseProxy()
 class UnknownField(object):
-    def __init__(self, *_, **__): pass
+	def __init__(self, *_, **__): pass
 
 class BaseModel(Model):
 	class Meta:
 		database = db
 
-class CharactersObf(BaseModel):
-	entrantCharacterName = TextField(column_name='entrantCharacterName', unique=True)
+class CharacterObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve character data as a Peewee ORM class.
+	"""
+	entrantCharacterName = TextField(column_name='entrantCharacterName')
 	entrantCharacterNameID = TextField(column_name='entrantCharacterNameID')
 	tableid = AutoField()
 	class Meta:
@@ -75,6 +78,9 @@ class CharactersObf(BaseModel):
 		table_name = 'CharactersObf'
 
 class EntrantObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve entrant data as a Peewee ORM class.
+	"""
 	entrantID = TextField(column_name='entrantID', null=False)
 	entrantTag = TextField(column_name='entrantTag')
 	entrantTeam = TextField(column_name='entrantTeam', null=True)
@@ -84,12 +90,15 @@ class EntrantObf(BaseModel):
 	tableid = TextField(unique=True, primary_key=True)
 	tournamentID = TextField()
 
-    
+
 	class Meta:
 		database =db
 		table_name = 'EntrantOBF'
 
 class EventObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve event data as a Peewee ORM class.
+	"""
 	eventDate = TextField(null=True)
 	gameName = TextField(column_name='gameName', null=True)
 	name = TextField()
@@ -106,6 +115,9 @@ class EventObf(BaseModel):
 		table_name = 'EventOBF'
 
 class GameObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve Game data as a Peewee ORM class.
+	"""
 	entrant1Characters = BlobField(column_name='entrant1Characters', null=True)
 	entrant1Result = TextField(column_name='entrant1Result', null=True,constraints=[Check("entrant1Result in ('win','lose','draw','Win','Lose','Draw','WIN','LOSE','DRAW')")])
 	entrant2Characters = BlobField(column_name='entrant2Characters', null=True)
@@ -121,6 +133,9 @@ class GameObf(BaseModel):
 		table_name = 'GameOBF'
 
 class PersonalInformationObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve personal information data as a Peewee ORM class.
+	"""
 	country = TextField(null=True)
 	gender = TextField(null=True)
 	entrant_language = BlobField(null=True)
@@ -136,6 +151,9 @@ class PersonalInformationObf(BaseModel):
 		table_name = 'PersonalInformationOBF'
 
 class PhaseObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve phase data as a Peewee ORM class.
+	"""
 	other = BlobField(null=True)
 	phaseID = TextField(column_name='phaseID', unique=True)
 	phaseStructure = TextField(column_name='phaseStructure', null=True)
@@ -148,6 +166,9 @@ class PhaseObf(BaseModel):
 		table_name = 'PhaseOBF'
 
 class SetObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve set data as a Peewee ORM class.
+	"""
 	entrant1ID = TextField(column_name='entrant1ID', null=True)
 	entrant1PrevSetID = TextField(column_name='entrant1PrevSetID', null=True)
 	entrant1Result = TextField(column_name='entrant1Result', null=True)
@@ -173,6 +194,9 @@ class SetObf(BaseModel):
 		table_name = 'SetOBF'
 
 class TournamentObf(BaseModel):
+	"""
+	This is the class that leverages SQL to store and retrieve Tournament data as a Peewee ORM class.
+	"""
 	tournamentTitle = TextField(column_name='tournamentTitle')
 	SetGameResult = TextField()
 	description = TextField()
@@ -180,8 +204,7 @@ class TournamentObf(BaseModel):
 	constraints=[Check("obfversion in ('v0.1','v0.2','v1.0', '0.1','0.2','1.0')")])
 	tournamentID = TextField(column_name='tournamentID',unique=True)
 	tableid = TextField(unique=True, primary_key=True)
-	
+
 	class Meta:
 		database =db
 		table_name = 'TournamentOBF'
-

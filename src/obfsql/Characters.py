@@ -5,24 +5,16 @@ import json
 ##Redundancies are made to ensure the reusability of the package
 from obfmodels import db, PersonalInformationObf
 
-class PersonalInformation():
+class Character():
 	"""
-	This is the class that stores and retrieves Personal Information data.
+	This is the class that stores and retrieves character data.
 	"""
 	# Initialize the data
-	def __init__(self,name=None,entrant_language=None,gender=None, country=None, pronouns=None, \
-	other=None,entrantTag=None, prefix=None):
-		self.name = name
-		self.country = country
-		self.gender = gender
-		self.pronouns=pronouns
-		self.other = other
-## Using entrant_ for a way to make sure that when parsing back the data it gets correctly labeled
-		self.entrant_language = entrant_language
-		self.prefix = prefix
-		self.entrantTag = entrantTag
+	def __init__(self,name=None,entrantCharacterName=None, entrantCharacterNameID=None):
+		self.entrantCharacterName = TextField(column_name='entrantCharacterName', unique=True)
+		self.entrantCharacterNameID = TextField(column_name='entrantCharacterNameID')
 
-	def savepersonalinformation(self,savedata='update'):
+	def savecharacter(self,savedata='update'):
 		"""Save player information
 
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
@@ -36,38 +28,27 @@ class PersonalInformation():
 			db.connect()
 		if type(self.other) == dict:
 			self.other = json.dumps(self.other)
-		query = PersonalInformationObf.select().where(\
-					PersonalInformationObf.entrantTag==self.entrantTag)
+
+		query = CharacterObf.select().where(\
+					CharacterObf.entrantCharacterName==self.entrantCharacterName,
+					CharacterObf.entrantCharacterNameID==self.entrantCharacterNameID
+					)
 		if query.exists():
 			if savedata == 'new':
 				return -1
 			else:
-				PInfo = PersonalInformationObf.update(
-					country = self.country,
-					gender = self.gender ,
-					entrant_language = self.entrant_language,
-					name = self.name,
-					other = self.other,
-					pronouns = self.pronouns,
-					entrant_prefix = self.prefix,
-					entrantTag = self.entrantTag,
-				).where(PersonalInformationObf.entrantTag == self.entrantTag)
-				PInfo.execute()
+				CInfo = CharacterObf.update(
+					entrantCharacterName = self.country,
+					entrantCharacterNameID = self.gender ,
+				).where(CharacterObf.entrantCharacterName==self.entrantCharacterName,
+				CharacterObf.entrantCharacterNameID==self.entrantCharacterNameID)
+				CInfo.execute()
 				db.close()
 				return 1
 		else:
-			import secrets
-			PInfo = PersonalInformationObf.create(
-				country = self.country,
-				gender = self.gender ,
-				entrant_language = self.entrant_language,
-				name = self.name,
-				other = self.other,
-				pronouns = self.pronouns,
-				entrant_prefix = self.prefix,
-				entrantTag = self.entrantTag,
-				tableid = secrets.token_hex(nbytes=16)
-
+			CInfo = CharacterObf.update(
+				entrantCharacterName = self.country,
+				entrantCharacterNameID = self.gender ,
 			)
 			db.close()
 		return 1
