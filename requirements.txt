@@ -1,0 +1,4 @@
+peewee>=3.15.3
+pymysql>=1.1.1
+psycopg>=3.2
+psycopg[pool]>=3.2
