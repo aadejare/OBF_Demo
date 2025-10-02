@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>obfsql.obfmodels &#8212; OBFSQL 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for obfsql.obfmodels</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Script to communicate OBS to SQLITE database</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">peewee</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">peewee</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="c1">#Must modify this information before production</span>
+<span class="c1">#Password must be modified.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playhouse.sqlite_ext</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteExtDatabase</span>
+
+<span class="c1"># PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), &#39;../&#39;, &#39;configfiles&#39;))</span>
+<span class="c1"># make db proxy</span>
+<span class="c1"># Link https://docs.peewee-orm.com/en/latest/peewee/database.html#deferring-initialization</span>
+<span class="c1"># db =  DatabaseProxy()</span>
+<span class="c1"># PROJECT_PATH  = os.path.abspath(os.path.join(os.path.dirname( __file__ ), &#39;.&#39;, &#39;&#39;))</span>
+<span class="c1"># db = SqliteExtDatabase(PROJECT_PATH + &#39;/obfsql.db&#39;, regexp_function=True, timeout=3,</span>
+<span class="c1">#						pragmas={&#39;journal_mode&#39;: &#39;wal&#39;})</span>
+<span class="c1">#</span>
+
+<span class="c1"># Code rip from Tim Leher</span>
+<span class="c1"># https://timlehr.com/2018/01/lazy-database-initialization-with-peewee-proxy-subclasses/</span>
+<span class="c1"># class CustomProxy(DatabaseProxy):</span>
+<span class="c1"># 	&quot;&quot;&quot;Simple :obj:`peewee.proxy` subclass that tries to initialize the DB proxy on-demand.</span>
+<span class="c1"># 	&quot;&quot;&quot;</span>
+<span class="c1"># 	def __getattr__(self, attr):</span>
+<span class="c1"># 		&quot;&quot;&quot; If a member of the proxy is being accessed,</span>
+<span class="c1"># 		and it&#39;s not yet initialized (obj == None), try initialization.</span>
+<span class="c1"># 		&quot;&quot;&quot;</span>
+<span class="c1"># 		if self.obj is None:</span>
+<span class="c1"># 			self.initialize_proxy()</span>
+<span class="c1"># 		return super(Proxy, self).__getattribute__(attr)</span>
+<span class="c1">#</span>
+<span class="c1"># 	def initialize_proxy(self, dbtype = None, path=None, database=None,**kwargs):</span>
+<span class="c1"># 		&quot;&quot;&quot;Helper function that initializes the proxy with credentials read from somewhere else (e.g. config-file).</span>
+<span class="c1"># 		For demonstration purposes, they are hardcoded though. :)</span>
+<span class="c1"># 		&quot;&quot;&quot;</span>
+<span class="c1"># 		log.debug(&quot;Access to uninitialized DB proxy requested. Try initialization ...&quot;)</span>
+<span class="c1"># 		if type(dbtype)!= str:</span>
+<span class="c1"># 			return None</span>
+<span class="c1"># 		if dbtype.lower() in [&#39;sqlite&#39;, &#39;sqlite3&#39;,&#39;lite&#39;,&#39;default&#39;]:</span>
+<span class="c1"># 		# 			db_sqlite = SqliteExtDatabase(PROJECT_PATH + &#39;/obfsql.db&#39;, regexp_function=True, timeout=3,</span>
+<span class="c1"># 		# 							   pragmas={&#39;journal_mode&#39;: &#39;wal&#39;})</span>
+<span class="c1"># 			return self.initialize(SqliteExtDatabase(path + database, regexp_function=True, timeout=3,</span>
+<span class="c1"># 			pragmas={&#39;journal_mode&#39;: &#39;wal&#39;}))</span>
+<span class="c1"># # 			self.db = config.db</span>
+<span class="c1"># 		if dbtype.lower() in [&#39;postgres&#39;, &#39;post&#39;,&#39;postgresql&#39;]:</span>
+<span class="c1"># 			return self.initialize(PostgresqlDatabase(database, user=kwargs[&#39;user&#39;],</span>
+<span class="c1"># 			host=kwargs[&#39;host&#39;],</span>
+<span class="c1"># 			password=kwargs[&#39;pw&#39;],</span>
+<span class="c1"># 			port=kwargs[&#39;port&#39;]))</span>
+<span class="c1"># # 			self.db = config.db</span>
+<span class="c1"># 		if dbtype.lower()  in [&#39;mariadb&#39;, &#39;mysql&#39;,&#39;mysqldb&#39;]:</span>
+<span class="c1"># 			return self.initialize(MySQLDatabase(database, user=kwargs[&#39;user&#39;],</span>
+<span class="c1"># 			host=kwargs[&#39;host&#39;],</span>
+<span class="c1"># 			password=kwargs[&#39;pw&#39;]))</span>
+<span class="c1"># # 			self.db = config.db</span>
+<span class="c1"># # 		return self.db</span>
+<span class="c1"># db = CustomProxy()</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">DatabaseProxy</span><span class="p">()</span>
+<div class="viewcode-block" id="UnknownField">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.UnknownField">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnknownField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span> <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="BaseModel">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.BaseModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span> <span class="n">db</span></div>
+
+
+<div class="viewcode-block" id="CharacterObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.CharacterObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CharacterObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve character data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">entrantCharacterName</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrantCharacterName&#39;</span><span class="p">)</span>
+	<span class="n">entrantCharacterNameID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrantCharacterNameID&#39;</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">AutoField</span><span class="p">()</span>
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;CharactersObf&#39;</span></div>
+
+
+<div class="viewcode-block" id="EntrantObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.EntrantObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EntrantObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve entrant data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">entrantID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrantID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+	<span class="n">entrantTag</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrantTag&#39;</span><span class="p">)</span>
+	<span class="n">entrantTeam</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrantTeam&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">finalPlacement</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;finalPlacement&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">initialSeed</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;initialSeed&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">other</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tournamentID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">()</span>
+
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;EntrantOBF&#39;</span></div>
+
+
+<div class="viewcode-block" id="EventObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.EventObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EventObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve event data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">eventDate</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">gameName</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;gameName&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">()</span>
+	<span class="n">numberEntrants</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;numberEntrants&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">originURL</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;originURL&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">other</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">ruleset</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tournamentID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">()</span>
+	<span class="n">tournamentStructure</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;tournamentStructure&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;EventOBF&#39;</span></div>
+
+
+<div class="viewcode-block" id="GameObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.GameObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GameObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve Game data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">entrant1Characters</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1Characters&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant1Result</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1Result&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">Check</span><span class="p">(</span><span class="s2">&quot;entrant1Result in (&#39;win&#39;,&#39;lose&#39;,&#39;draw&#39;,&#39;Win&#39;,&#39;Lose&#39;,&#39;Draw&#39;,&#39;WIN&#39;,&#39;LOSE&#39;,&#39;DRAW&#39;)&quot;</span><span class="p">)])</span>
+	<span class="n">entrant2Characters</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2Characters&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant2Result</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2Result&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">Check</span><span class="p">(</span><span class="s2">&quot;entrant2Result in (&#39;win&#39;,&#39;lose&#39;,&#39;draw&#39;,&#39;Win&#39;,&#39;Lose&#39;,&#39;Draw&#39;,&#39;WIN&#39;,&#39;LOSE&#39;,&#39;DRAW&#39;)&quot;</span><span class="p">)])</span>
+	<span class="n">gameNumber</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;gameNumber&#39;</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">other</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">stage</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">setID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;GameOBF&#39;</span></div>
+
+
+<div class="viewcode-block" id="PersonalInformationObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.PersonalInformationObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PersonalInformationObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve personal information data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">country</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">gender</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant_language</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">other</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">pronouns</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrantTag</span> <span class="o">=</span>  <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrantTag&#39;</span><span class="p">,</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+	<span class="n">entrant_prefix</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;PersonalInformationOBF&#39;</span></div>
+
+
+<div class="viewcode-block" id="PhaseObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.PhaseObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PhaseObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve phase data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">other</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">phaseID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;phaseID&#39;</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">phaseStructure</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;phaseStructure&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">eventID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;eventID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;PhaseOBF&#39;</span></div>
+
+
+<div class="viewcode-block" id="SetObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.SetObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SetObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve set data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">entrant1ID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1ID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant1PrevSetID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1PrevSetID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant1Result</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1Result&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant1Score</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1Score&#39;</span><span class="p">)</span>
+	<span class="n">entrant2ID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2ID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant2PrevSetID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2PrevSetID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant2Result</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2Result&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant2Score</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2Score&#39;</span><span class="p">)</span>
+	<span class="n">games</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant1NextSetID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant1NextSetID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">other</span> <span class="o">=</span> <span class="n">BlobField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">phaseID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;phaseID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">roundID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;roundID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">setFormat</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;setFormat&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">setID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;setID&#39;</span><span class="p">)</span>
+	<span class="n">status</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">entrant2NextSetID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;entrant2NextSetID&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tournamentID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;tournamentID&#39;</span><span class="p">)</span>
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;SetOBF&#39;</span></div>
+
+
+<div class="viewcode-block" id="TournamentObf">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.obfmodels.TournamentObf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TournamentObf</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that leverages SQL to store and retrieve Tournament data as a Peewee ORM class.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">tournamentTitle</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;tournamentTitle&#39;</span><span class="p">)</span>
+	<span class="n">SetGameResult</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">()</span>
+	<span class="n">description</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">()</span>
+	<span class="n">obfversion</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+	<span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">Check</span><span class="p">(</span><span class="s2">&quot;obfversion in (&#39;v0.1&#39;,&#39;v0.2&#39;,&#39;v1.0&#39;, &#39;0.1&#39;,&#39;0.2&#39;,&#39;1.0&#39;)&quot;</span><span class="p">)])</span>
+	<span class="n">tournamentID</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;tournamentID&#39;</span><span class="p">,</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tableid</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">database</span> <span class="o">=</span><span class="n">db</span>
+		<span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;TournamentOBF&#39;</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">OBFSQL</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">obfsql</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, AJ Adejare.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

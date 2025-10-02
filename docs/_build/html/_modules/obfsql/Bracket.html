@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>obfsql.Bracket &#8212; OBFSQL 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for obfsql.Bracket</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="n">PROJECT_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playhouse.sqlite_ext</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteExtDatabase</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">PROJECT_PATH</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">obfmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span> <span class="k">as</span> <span class="n">obfdb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Event</span><span class="o">,</span><span class="w"> </span><span class="nn">MatchSet</span><span class="o">,</span><span class="w"> </span><span class="nn">Entrant</span><span class="o">,</span><span class="w"> </span><span class="nn">Game</span><span class="o">,</span><span class="w"> </span><span class="nn">Phase</span><span class="o">,</span><span class="w"> </span><span class="nn">Tournament</span>
+
+
+<div class="viewcode-block" id="Bracket">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Bracket.Bracket">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bracket</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This class creates and recovers all of the data for a specific tournament/event for Open Bracket Format.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">obfdb</span>
+
+<div class="viewcode-block" id="Bracket.connect">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Bracket.Bracket.connect">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Connect the object to a database to access the bracket information</span>
+<span class="sd">		dbtype :str: Type of database to use</span>
+<span class="sd">		path :str: Path to the database (either url or directory path)</span>
+<span class="sd">		database :str: Database name</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># 		self.db.initialize_proxy(dbtype,path,database,**kwargs)</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dbtype</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="n">dbtype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sqlite&quot;</span><span class="p">,</span> <span class="s2">&quot;sqlite3&quot;</span><span class="p">,</span> <span class="s2">&quot;lite&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">]:</span>
+			<span class="c1"># 			db_sqlite = SqliteExtDatabase(PROJECT_PATH + &#39;/obfsql.db&#39;, regexp_function=True, timeout=3,</span>
+			<span class="c1"># 							   pragmas={&#39;journal_mode&#39;: &#39;wal&#39;})</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span>
+				<span class="n">SqliteExtDatabase</span><span class="p">(</span>
+					<span class="n">path</span> <span class="o">+</span> <span class="n">database</span><span class="p">,</span>
+					<span class="n">regexp_function</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+					<span class="n">timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+					<span class="n">pragmas</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;journal_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;wal&quot;</span><span class="p">},</span>
+				<span class="p">)</span>
+			<span class="p">)</span>
+		<span class="c1"># 			self.db = config.db</span>
+		<span class="k">if</span> <span class="n">dbtype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;postgresql&quot;</span><span class="p">]:</span>
+			<span class="n">cself</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span>
+				<span class="n">PostgresqlDatabase</span><span class="p">(</span>
+					<span class="n">database</span><span class="p">,</span>
+					<span class="n">user</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+					<span class="n">host</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;host&quot;</span><span class="p">],</span>
+					<span class="n">password</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;pw&quot;</span><span class="p">],</span>
+					<span class="n">port</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">],</span>
+				<span class="p">)</span>
+			<span class="p">)</span>
+		<span class="c1"># 			self.db = config.db</span>
+		<span class="k">if</span> <span class="n">dbtype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;mariadb&quot;</span><span class="p">,</span> <span class="s2">&quot;mysql&quot;</span><span class="p">,</span> <span class="s2">&quot;mysqldb&quot;</span><span class="p">]:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span>
+				<span class="n">MySQLDatabase</span><span class="p">(</span>
+					<span class="n">database</span><span class="p">,</span>
+					<span class="n">user</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+					<span class="n">host</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;host&quot;</span><span class="p">],</span>
+					<span class="n">password</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;pw&quot;</span><span class="p">],</span>
+				<span class="p">)</span>
+			<span class="p">)</span>
+		<span class="c1"># 			self.db = config.db</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Bracket.create_tables">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Bracket.Bracket.create_tables">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">create_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Create the table for the data if it does not exist</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="kn">from</span><span class="w"> </span><span class="nn">obfmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventObf</span><span class="p">,</span> <span class="n">SetObf</span><span class="p">,</span> <span class="n">EntrantObf</span><span class="p">,</span> <span class="n">GameObf</span><span class="p">,</span> <span class="n">PhaseObf</span>
+		<span class="kn">from</span><span class="w"> </span><span class="nn">obfmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">TournamentObf</span><span class="p">,</span> <span class="n">PersonalInformationObf</span><span class="p">,</span> <span class="n">CharacterObf</span>
+		<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">:</span>
+				<span class="n">tables</span> <span class="o">=</span> <span class="p">[</span>
+					<span class="n">EventObf</span><span class="p">,</span>
+					<span class="n">SetObf</span><span class="p">,</span>
+					<span class="n">EntrantObf</span><span class="p">,</span>
+					<span class="n">GameObf</span><span class="p">,</span>
+					<span class="n">PhaseObf</span><span class="p">,</span>
+					<span class="n">TournamentObf</span><span class="p">,</span>
+					<span class="n">PersonalInformationObf</span><span class="p">,</span>
+					<span class="n">CharacterObf</span><span class="p">,</span>
+				<span class="p">]</span>
+				<span class="k">for</span> <span class="n">ig</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+					<span class="c1"># print(str(ig))</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">create_tables</span><span class="p">([</span><span class="n">ig</span><span class="p">])</span>
+			<span class="c1"># del EventObf, SetObf, EntrantObf, GameObf, PhaseObf, TournamentObf, PersonalInformationObf,CharacterObf</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+			<span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+			<span class="k">return</span> <span class="mi">1</span>
+		<span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Bracket.retrieve">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Bracket.Bracket.retrieve">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournamentID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tournamentTitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eventName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Retrive the Tournament from the SQL Database and returns object</span>
+<span class="sd">		tournamentID :str: required, tournament ID to locate the tournament</span>
+<span class="sd">		tournamentTitle :str: optional, tournament title. Note, will select latest tournament with same title</span>
+<span class="sd">		eventName :str: name of the event to retrieve  Note, will select latest event with same title</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">tournamentID</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tournamentTitle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No tournament retrieval paramter was entered&quot;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="kc">None</span>
+		<span class="k">elif</span> <span class="n">tournamentID</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tournamentTitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span>
+				<span class="s2">&quot;Warning: Title retrival will retrieve the latest tournament entered with the title&quot;</span>
+			<span class="p">)</span>
+			<span class="n">tourn_ex</span> <span class="o">=</span> <span class="n">Tournament</span><span class="o">.</span><span class="n">Tournament</span><span class="p">(</span><span class="n">tournamentTitle</span><span class="o">=</span><span class="n">tournamentTitle</span><span class="p">)</span>
+			<span class="n">tourn_ex</span><span class="o">.</span><span class="n">gettournamentID</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">tourn_ex</span> <span class="o">=</span> <span class="n">Tournament</span><span class="o">.</span><span class="n">Tournament</span><span class="p">(</span><span class="n">tournamentID</span><span class="o">=</span><span class="n">tournamentID</span><span class="p">)</span>
+		<span class="n">OBF</span> <span class="o">=</span> <span class="n">tourn_ex</span><span class="o">.</span><span class="n">exporttournament</span><span class="p">()</span>
+		<span class="c1"># Get event data</span>
+		<span class="n">event_ex</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">eventName</span><span class="p">,</span> <span class="n">tournamentID</span><span class="o">=</span><span class="n">tourn_ex</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+		<span class="n">event_ex2</span> <span class="o">=</span> <span class="n">event_ex</span><span class="o">.</span><span class="n">exportevent</span><span class="p">()</span>
+		<span class="k">del</span> <span class="n">event_ex2</span><span class="p">[</span><span class="s2">&quot;tournamentID&quot;</span><span class="p">]</span>
+		<span class="n">OBF</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_ex2</span>
+		<span class="n">phase_data</span> <span class="o">=</span> <span class="n">Phase</span><span class="o">.</span><span class="n">Phase</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">event_ex</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">OBF</span><span class="p">[</span><span class="s2">&quot;phases&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_data</span><span class="o">.</span><span class="n">exportphases</span><span class="p">()</span>
+		<span class="n">set_ex</span> <span class="o">=</span> <span class="n">MatchSet</span><span class="o">.</span><span class="n">MatchSet</span><span class="p">(</span><span class="n">tournamentID</span><span class="o">=</span><span class="n">tourn_ex</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+		<span class="n">set_ex2</span> <span class="o">=</span> <span class="n">set_ex</span><span class="o">.</span><span class="n">exportsets</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_ex2</span><span class="p">)):</span>
+			<span class="n">game_ex</span> <span class="o">=</span> <span class="n">Game</span><span class="o">.</span><span class="n">Game</span><span class="p">(</span><span class="n">setID</span><span class="o">=</span><span class="n">set_ex2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;setID&quot;</span><span class="p">])</span>
+			<span class="n">set_ex2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;games&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">game_ex</span><span class="o">.</span><span class="n">exportgames</span><span class="p">()</span>
+		<span class="n">OBF</span><span class="p">[</span><span class="s2">&quot;sets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">set_ex2</span><span class="p">]</span>
+		<span class="n">entrant_ex</span> <span class="o">=</span> <span class="n">Entrant</span><span class="o">.</span><span class="n">Entrant</span><span class="p">(</span><span class="n">tournamentID</span><span class="o">=</span><span class="n">tourn_ex</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+		<span class="n">OBF</span><span class="p">[</span><span class="s2">&quot;entrants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">entrant_ex</span><span class="o">.</span><span class="n">exportentrants</span><span class="p">()</span>
+		<span class="n">OBF</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_ex2</span>
+		<span class="k">return</span> <span class="n">OBF</span></div>
+
+
+<div class="viewcode-block" id="Bracket.retrievejson">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Bracket.Bracket.retrievejson">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">retrievejson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournamentID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tournamentTitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eventName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Retrive the Tournament from the SQL Database and returns JSON</span>
+<span class="sd">		tournamentID :str: required, tournament ID to locate the tournament</span>
+<span class="sd">		tournamentTitle :str: optional, tournament title. Note, will select latest tournament with same title</span>
+<span class="sd">		eventName :str: name of the event to retrieve  Note, will select latest event with same title</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">OBF</span> <span class="o">=</span> <span class="n">retrieve</span><span class="p">(</span><span class="n">tournamentID</span><span class="p">,</span> <span class="n">tournamentTitle</span><span class="p">,</span> <span class="n">eventName</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">OBF</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+
+	<span class="c1">#</span>
+<div class="viewcode-block" id="Bracket.store">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.Bracket.Bracket.store">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">bracket</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">bracket</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+			<span class="n">bracket</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">bracket</span><span class="p">)</span>
+		<span class="k">if</span> <span class="s2">&quot;tournamentID&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">:</span>
+			<span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;tournamentID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="c1"># print(&quot;Not here&quot;)</span>
+			<span class="c1"># return None</span>
+		<span class="k">if</span> <span class="s2">&quot;SetGameResult&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">:</span>
+			<span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;SetGameResult&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;win&quot;</span><span class="p">,</span> <span class="s2">&quot;lose&quot;</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">,</span> <span class="s2">&quot;dq&quot;</span><span class="p">]</span>
+		<span class="k">if</span> <span class="s2">&quot;version&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">:</span>
+			<span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;v1.0&quot;</span>
+		<span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">:</span>
+			<span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;No description&quot;</span>
+		<span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">:</span>
+			<span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;No title&quot;</span>
+		<span class="n">tourn_bracket</span> <span class="o">=</span> <span class="n">Tournament</span><span class="o">.</span><span class="n">Tournament</span><span class="p">(</span>
+			<span class="n">tournamentTitle</span><span class="o">=</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">],</span>
+			<span class="n">tournamentID</span><span class="o">=</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;tournamentID&quot;</span><span class="p">],</span>
+			<span class="n">obfversion</span><span class="o">=</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
+			<span class="n">description</span><span class="o">=</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span>
+			<span class="n">SetGameResult</span><span class="o">=</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;SetGameResult&quot;</span><span class="p">],</span>
+		<span class="p">)</span>
+		<span class="n">tourn_bracket</span><span class="o">.</span><span class="n">savetournament</span><span class="p">(</span><span class="s2">&quot;new&quot;</span><span class="p">)</span>
+		<span class="n">event_list</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="n">event_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">event_list</span> <span class="o">=</span> <span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span>
+		<span class="k">for</span> <span class="n">eventx</span> <span class="ow">in</span> <span class="n">event_list</span><span class="p">:</span>
+			<span class="c1"># 			print(eventx)</span>
+			<span class="n">event_obf</span> <span class="o">=</span> <span class="n">eventx</span>
+			<span class="n">event_bracket</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span>
+				<span class="n">eventDate</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;eventDate&quot;</span><span class="p">],</span>
+				<span class="n">gameName</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;gameName&quot;</span><span class="p">],</span>
+				<span class="n">ruleset</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;ruleset&quot;</span><span class="p">],</span>
+				<span class="n">originURL</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;originURL&quot;</span><span class="p">],</span>
+				<span class="n">name</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+				<span class="n">numberEntrants</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;numberEntrants&quot;</span><span class="p">],</span>
+				<span class="n">tournamentStructure</span><span class="o">=</span><span class="n">event_obf</span><span class="p">[</span><span class="s2">&quot;tournamentStructure&quot;</span><span class="p">],</span>
+				<span class="n">tournamentID</span><span class="o">=</span><span class="n">tourn_bracket</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+			<span class="p">)</span>
+			<span class="n">event_bracket</span><span class="o">.</span><span class="n">saveevent</span><span class="p">(</span><span class="s2">&quot;new&quot;</span><span class="p">)</span>
+			<span class="c1"># 			print (&#39;Next Phase Data: \n\n&#39;)</span>
+			<span class="k">if</span> <span class="s2">&quot;phases&quot;</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;phases&quot;</span><span class="p">]:</span>
+					<span class="n">phase_bracket</span> <span class="o">=</span> <span class="n">Phase</span><span class="o">.</span><span class="n">Phase</span><span class="p">(</span>
+						<span class="n">phaseID</span><span class="o">=</span><span class="n">ix</span><span class="p">[</span><span class="s2">&quot;phaseID&quot;</span><span class="p">],</span>
+						<span class="n">phaseStructure</span><span class="o">=</span><span class="n">ix</span><span class="p">[</span><span class="s2">&quot;phaseStructure&quot;</span><span class="p">],</span>
+						<span class="n">name</span><span class="o">=</span><span class="n">event_bracket</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+					<span class="p">)</span>
+					<span class="n">phase_bracket</span><span class="o">.</span><span class="n">savephase</span><span class="p">(</span><span class="n">savedata</span><span class="o">=</span><span class="s2">&quot;new&quot;</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">phase_bracket</span> <span class="o">=</span> <span class="n">Phase</span><span class="o">.</span><span class="n">Phase</span><span class="p">(</span>
+					<span class="n">phaseID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phaseStructure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">event_bracket</span><span class="o">.</span><span class="n">name</span>
+				<span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;sets&quot;</span><span class="p">])):</span>
+			<span class="n">set_bracket_parse</span> <span class="o">=</span> <span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;sets&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+			<span class="c1"># print(set_bracket_parse)</span>
+			<span class="k">if</span> <span class="s2">&quot;setFormat&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">set_bracket_parse</span><span class="p">:</span>
+				<span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;setFormat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="n">set_bracket</span> <span class="o">=</span> <span class="n">MatchSet</span><span class="o">.</span><span class="n">MatchSet</span><span class="p">(</span>
+				<span class="n">entrant1ID</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant1ID&quot;</span><span class="p">],</span>
+				<span class="n">entrant2ID</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant2ID&quot;</span><span class="p">],</span>
+				<span class="n">status</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">],</span>
+				<span class="n">entrant1Result</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant1Result&quot;</span><span class="p">],</span>
+				<span class="n">entrant2Result</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant2Result&quot;</span><span class="p">],</span>
+				<span class="n">entrant1Score</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant1Score&quot;</span><span class="p">],</span>
+				<span class="n">entrant2Score</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant2Score&quot;</span><span class="p">],</span>
+				<span class="n">entrant1NextSetID</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant1NextSetID&quot;</span><span class="p">],</span>
+				<span class="n">entrant2NextSetID</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant2NextSetID&quot;</span><span class="p">],</span>
+				<span class="n">setFormat</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;setFormat&quot;</span><span class="p">],</span>
+				<span class="n">phaseID</span><span class="o">=</span><span class="n">phase_bracket</span><span class="o">.</span><span class="n">phaseID</span><span class="p">,</span>
+				<span class="n">setID</span><span class="o">=</span><span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;setID&quot;</span><span class="p">],</span>
+				<span class="n">tournamentID</span><span class="o">=</span><span class="n">tourn_bracket</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+			<span class="p">)</span>
+			<span class="c1"># 			print(set_bracket_parse[&#39;setID&#39;])</span>
+			<span class="n">set_bracket</span><span class="o">.</span><span class="n">saveset</span><span class="p">(</span><span class="s2">&quot;new&quot;</span><span class="p">)</span>
+			<span class="c1"># 			print(&quot;THIS IS SET ID: &quot; + str(set_bracket.setID))</span>
+			<span class="n">game_bracket_set</span> <span class="o">=</span> <span class="n">set_bracket_parse</span><span class="p">[</span><span class="s2">&quot;games&quot;</span><span class="p">]</span>
+			<span class="c1"># 			print (&#39;Game bracket: \n\n\n&#39;)</span>
+			<span class="k">for</span> <span class="n">jx</span> <span class="ow">in</span> <span class="n">game_bracket_set</span><span class="p">:</span>
+				<span class="n">game_bracket_parse</span> <span class="o">=</span> <span class="n">jx</span>
+				<span class="n">game_bracket</span> <span class="o">=</span> <span class="n">Game</span><span class="o">.</span><span class="n">Game</span><span class="p">(</span>
+					<span class="n">gameNumber</span><span class="o">=</span><span class="n">game_bracket_parse</span><span class="p">[</span><span class="s2">&quot;gameNumber&quot;</span><span class="p">],</span>
+					<span class="n">entrant1Characters</span><span class="o">=</span><span class="n">game_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant1Characters&quot;</span><span class="p">],</span>
+					<span class="n">entrant2Characters</span><span class="o">=</span><span class="n">game_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant2Characters&quot;</span><span class="p">],</span>
+					<span class="n">stage</span><span class="o">=</span><span class="n">game_bracket_parse</span><span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">],</span>
+					<span class="n">entrant1Result</span><span class="o">=</span><span class="n">game_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant1Result&quot;</span><span class="p">],</span>
+					<span class="n">entrant2Result</span><span class="o">=</span><span class="n">game_bracket_parse</span><span class="p">[</span><span class="s2">&quot;entrant2Result&quot;</span><span class="p">],</span>
+					<span class="n">setID</span><span class="o">=</span><span class="n">set_bracket</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span>
+					<span class="n">other</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+				<span class="p">)</span>
+				<span class="n">game_bracket</span><span class="o">.</span><span class="n">savegame</span><span class="p">(</span><span class="s2">&quot;new&quot;</span><span class="p">)</span>
+		<span class="c1"># 				print(set_bracket.exportset())</span>
+		<span class="c1"># 		print (&#39;Entrant bracket: \n\n\n&#39;)</span>
+		<span class="c1"># 		print(bracket[&#39;entrants&#39;])</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;entrants&quot;</span><span class="p">])):</span>
+			<span class="n">entrant_parse</span> <span class="o">=</span> <span class="n">bracket</span><span class="p">[</span><span class="s2">&quot;entrants&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+			<span class="c1"># 			print (entrant_parse[&#39;entrantTag&#39;],)</span>
+			<span class="n">entrant_Data</span> <span class="o">=</span> <span class="n">Entrant</span><span class="o">.</span><span class="n">Entrant</span><span class="p">(</span>
+				<span class="n">entrantID</span><span class="o">=</span><span class="n">entrant_parse</span><span class="p">[</span><span class="s2">&quot;entrantTag&quot;</span><span class="p">],</span>
+				<span class="n">entrantTag</span><span class="o">=</span><span class="n">entrant_parse</span><span class="p">[</span><span class="s2">&quot;entrantTag&quot;</span><span class="p">],</span>
+				<span class="n">finalPlacement</span><span class="o">=</span><span class="n">entrant_parse</span><span class="p">[</span><span class="s2">&quot;finalPlacement&quot;</span><span class="p">],</span>
+				<span class="n">initialSeed</span><span class="o">=</span><span class="n">entrant_parse</span><span class="p">[</span><span class="s2">&quot;initialSeed&quot;</span><span class="p">],</span>
+				<span class="n">personalInformation</span><span class="o">=</span><span class="n">entrant_parse</span><span class="p">[</span><span class="s2">&quot;personalInformation&quot;</span><span class="p">],</span>
+				<span class="n">tournamentID</span><span class="o">=</span><span class="n">tourn_bracket</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+			<span class="p">)</span>
+			<span class="c1"># 			print(entrant_Data.entrantTag)</span>
+			<span class="n">entrant_Data</span><span class="o">.</span><span class="n">saveentrant</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">)</span>
+		<span class="c1"># 			print(entrant_Data.exportentrants())</span>
+		<span class="k">return</span> <span class="mi">0</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">OBFSQL</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">obfsql</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, AJ Adejare.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

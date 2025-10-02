@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>obfsql.MatchSet &#8212; OBFSQL 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for obfsql.MatchSet</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">obfmodels</span><span class="w"> </span><span class="kn">import</span>  <span class="n">db</span><span class="p">,</span> <span class="n">SetObf</span>
+<span class="c1">#Called MatchSet because SET is a reserved word in Python</span>
+
+
+<div class="viewcode-block" id="MatchSet">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.MatchSet.MatchSet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MatchSet</span><span class="p">():</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This is the class that stores and retrieves set data.</span>
+<span class="sd">	Note: becuase &quot;Set&quot; is a reserved word in Python, the function is called MatchSet.</span>
+<span class="sd">	It is still set in Open Bracket Format</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># Initialize the data</span>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">setID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">entrant1ID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">entrant2ID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>\
+				<span class="n">entrant1Result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">entrant2Result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>\
+				<span class="n">entrant1Score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">entrant2Score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+				<span class="n">entrant1NextSetID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">entrant2NextSetID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+				<span class="n">entrant1PrevSetID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">entrant2PrevSetID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+				<span class="n">setFormat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phaseID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">roundID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">games</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+				<span class="n">tournamentID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setID</span> <span class="o">=</span> <span class="n">setID</span> <span class="c1">#Assume that SetID is unique</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant1ID</span><span class="o">=</span><span class="n">entrant1ID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant2ID</span><span class="o">=</span><span class="n">entrant2ID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="o">=</span><span class="n">status</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant1Result</span><span class="o">=</span><span class="n">entrant1Result</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant2Result</span><span class="o">=</span><span class="n">entrant2Result</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant1Score</span><span class="o">=</span><span class="n">entrant1Score</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant2Score</span><span class="o">=</span><span class="n">entrant2Score</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant1NextSetID</span><span class="o">=</span><span class="n">entrant1NextSetID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant2NextSetID</span><span class="o">=</span><span class="n">entrant2NextSetID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant1PrevSetID</span><span class="o">=</span><span class="n">entrant1PrevSetID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">entrant2PrevSetID</span><span class="o">=</span><span class="n">entrant2PrevSetID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setFormat</span><span class="o">=</span><span class="n">setFormat</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">phaseID</span><span class="o">=</span><span class="n">phaseID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">roundID</span><span class="o">=</span><span class="n">roundID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">games</span><span class="o">=</span><span class="n">games</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span> <span class="o">=</span> <span class="n">tournamentID</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="n">other</span>
+
+<div class="viewcode-block" id="MatchSet.saveset">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.MatchSet.MatchSet.saveset">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">saveset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">savedata</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>\
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">setID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">savedata</span> <span class="o">==</span> <span class="s1">&#39;new&#39;</span><span class="p">:</span>
+				<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">query</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>\
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">setID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span>
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">tournamentID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+				<span class="n">tablehash</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">tableid</span>
+				<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span>
+				<span class="n">SETInfo</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+					<span class="n">setID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span>
+					<span class="n">entrant1ID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1ID</span><span class="p">,</span>
+					<span class="n">entrant2ID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2ID</span><span class="p">,</span>
+					<span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+					<span class="n">entrant1Result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1Result</span><span class="p">,</span>
+					<span class="n">entrant2Result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2Result</span><span class="p">,</span>
+					<span class="n">entrant1Score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1Score</span><span class="p">,</span>
+					<span class="n">entrant2Score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2Score</span><span class="p">,</span>
+					<span class="n">entrant1NextSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1NextSetID</span><span class="p">,</span>
+					<span class="n">entrant2NextSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2NextSetID</span><span class="p">,</span>
+					<span class="n">entrant1PrevSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1PrevSetID</span><span class="p">,</span>
+					<span class="n">entrant2PrevSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2PrevSetID</span><span class="p">,</span>
+					<span class="n">setFormat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setFormat</span><span class="p">,</span>
+					<span class="n">phaseID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">phaseID</span><span class="p">,</span>
+					<span class="n">roundID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">roundID</span><span class="p">,</span>
+					<span class="n">games</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">games</span><span class="p">,</span>
+					<span class="n">tournamentID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+					<span class="n">tableid</span> <span class="o">=</span> <span class="n">tablehash</span><span class="p">,</span>
+					<span class="n">other</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">,</span>
+				<span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">SetObf</span><span class="o">.</span><span class="n">setID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">tournamentID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+				<span class="n">SETInfo</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+				<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+				<span class="k">return</span> <span class="mi">1</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+			<span class="n">sethash</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_hex</span><span class="p">(</span><span class="n">nbytes</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">)</span>
+			<span class="n">SETInfo</span> <span class="o">=</span> <span class="n">SetObf</span><span class="p">(</span>
+					<span class="n">setID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span>
+					<span class="n">entrant1ID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1ID</span><span class="p">,</span>
+					<span class="n">entrant2ID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2ID</span><span class="p">,</span>
+					<span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+					<span class="n">entrant1Result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1Result</span><span class="p">,</span>
+					<span class="n">entrant2Result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2Result</span><span class="p">,</span>
+					<span class="n">entrant1Score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1Score</span><span class="p">,</span>
+					<span class="n">entrant2Score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2Score</span><span class="p">,</span>
+					<span class="n">entrant1NextSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1NextSetID</span><span class="p">,</span>
+					<span class="n">entrant2NextSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2NextSetID</span><span class="p">,</span>
+					<span class="n">entrant1PrevSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant1PrevSetID</span><span class="p">,</span>
+					<span class="n">entrant2PrevSetID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entrant2PrevSetID</span><span class="p">,</span>
+					<span class="n">setFormat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setFormat</span><span class="p">,</span>
+					<span class="n">phaseID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">phaseID</span><span class="p">,</span>
+					<span class="n">roundID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">roundID</span><span class="p">,</span>
+					<span class="n">games</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">games</span><span class="p">,</span>
+					<span class="n">tournamentID</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">,</span>
+					<span class="n">tableid</span> <span class="o">=</span> <span class="n">sethash</span><span class="p">,</span>
+					<span class="n">other</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">,</span>
+				<span class="p">)</span>
+			<span class="n">SETInfo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">force_insert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+		<span class="k">return</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="MatchSet.getset">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.MatchSet.MatchSet.getset">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">getset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Get phase information</span>
+
+<span class="sd">		:param savedata: Method of saving the data new is new data, rewrite is rewriting data</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: boolean</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>\
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">setID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">tournamentID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+			<span class="n">query</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>\
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">setID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">setID</span><span class="p">,</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">tournamentID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+			<span class="k">return</span> <span class="n">query</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MatchSet.exportset">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.MatchSet.MatchSet.exportset">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">exportset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Export Set info into a dictonary</span>
+
+<span class="sd">		:param savedata: Method of saving the data new is new data, rewrite is rewriting data</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: dict</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="kn">from</span><span class="w"> </span><span class="nn">playhouse.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_to_dict</span><span class="p">,</span> <span class="n">dict_to_model</span>
+		<span class="n">set_obj</span> <span class="o">=</span>  <span class="n">model_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getset</span><span class="p">())</span>
+		<span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;other&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;other&#39;</span><span class="p">])</span>
+		<span class="k">del</span> <span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;tableid&#39;</span><span class="p">]</span> <span class="c1"># Delete table id since it&#39;s not needed</span>
+		<span class="k">del</span> <span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;tournamentID&#39;</span><span class="p">]</span> <span class="c1"># Delete tournament ID since it&#39;s not needed</span>
+		<span class="k">return</span> <span class="n">set_obj</span></div>
+
+<div class="viewcode-block" id="MatchSet.exportsets">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.MatchSet.MatchSet.exportsets">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">exportsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Export Set info into a dictonary</span>
+
+<span class="sd">		:param savedata: Method of saving the data new is new data, rewrite is rewriting data</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: dict</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">setlist</span><span class="o">=</span><span class="p">[]</span> <span class="c1">#Yes list of set is called set list</span>
+		<span class="kn">from</span><span class="w"> </span><span class="nn">playhouse.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_to_dict</span><span class="p">,</span> <span class="n">dict_to_model</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>\
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">tournamentID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+			<span class="n">query</span> <span class="o">=</span> <span class="n">SetObf</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>\
+					<span class="n">SetObf</span><span class="o">.</span><span class="n">tournamentID</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">tournamentID</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">SetObf</span><span class="o">.</span><span class="n">setID</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+			<span class="n">set_obj</span> <span class="o">=</span>  <span class="n">model_to_dict</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+			<span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;other&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;other&#39;</span><span class="p">])</span>
+			<span class="k">del</span> <span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;tableid&#39;</span><span class="p">],</span> <span class="n">set_obj</span><span class="p">[</span><span class="s1">&#39;tournamentID&#39;</span><span class="p">]</span> <span class="c1"># Delete table id since it&#39;s not needed</span>
+			<span class="n">setlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">set_obj</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">setlist</span></div>
+
+
+<div class="viewcode-block" id="MatchSet.exportphasejsonstring">
+<a class="viewcode-back" href="../../obfsql.html#obfsql.MatchSet.MatchSet.exportphasejsonstring">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="nf">exportphasejsonstring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Export Player info into a json string</span>
+
+<span class="sd">		:param none:</span>
+<span class="sd">		:type: str</span>
+<span class="sd">		:return: str</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">set_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exportset</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">str</span><span class="p">({</span><span class="s1">&#39;Set&#39;</span><span class="p">:</span><span class="n">set_obj</span><span class="p">}))</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">OBFSQL</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">obfsql</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, AJ Adejare.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -14,18 +14,22 @@ from obfmodels import db as obfdb
 import Event, MatchSet, Entrant, Game, Phase, Tournament, PersonalInformation
 
 class OBFData_Event(Event.Event):
+	"""
+	This is the class focues on the indiviual Event field within OBF.
+	It will only retrieve/store data within the designated Event.
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -37,15 +41,15 @@ class OBFData_Event(Event.Event):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -64,18 +68,22 @@ class OBFData_Event(Event.Event):
 
 
 class OBFData_Game(Game.Game):
+	"""
+	This is the class focues on the indiviual Game field within OBF.
+	It will only retrieve/store data within the designated Game.
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -87,15 +95,15 @@ class OBFData_Game(Game.Game):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -114,18 +122,22 @@ class OBFData_Game(Game.Game):
 		return 0
 
 class OBFData_Phase(Phase.Phase):
+	"""
+	This is the class focues on the indiviual Phase field within OBF.
+	It will only retrieve/store data within the designated Phase.
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -137,15 +149,15 @@ class OBFData_Phase(Phase.Phase):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -162,18 +174,24 @@ class OBFData_Phase(Phase.Phase):
 			return 1
 
 class OBFData_MatchSet(MatchSet.MatchSet):
+	"""
+	This is the class focues on the indiviual Set field within OBF.
+	It will only retrieve/store data within the designated Set.
+	Note: becuase "Set" is a reserved word in Python, the function is called MatchSet.
+	It is still set in Open Bracket Format
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -185,15 +203,15 @@ class OBFData_MatchSet(MatchSet.MatchSet):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -212,18 +230,22 @@ class OBFData_MatchSet(MatchSet.MatchSet):
 		return 0
 
 class OBFData_Tournament(Tournament.Tournament):
+	"""
+	This is the class focues on the indiviual Tournament field within OBF.
+	It will only retrieve/store data within the designated Tournament.
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -235,15 +257,15 @@ class OBFData_Tournament(Tournament.Tournament):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			self.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -262,18 +284,22 @@ class OBFData_Tournament(Tournament.Tournament):
 
 
 class OBFData_Entrant(Entrant.Entrant):
+	"""
+	This is the class focues on the indiviual Entrant field within OBF.
+	It will only retrieve/store data within the designated Entrant.
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -285,15 +311,15 @@ class OBFData_Entrant(Entrant.Entrant):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -312,18 +338,22 @@ class OBFData_Entrant(Entrant.Entrant):
 
 
 class OBFData_PersonalInformation(PersonalInformation.PersonalInformation):
+	"""
+	This is the class focues on the indiviual Personal Information field within OBF.
+	It will only retrieve/store data within the designated Personal Information.
+	"""
 	def __init__(self):
 		self.db = obfdb
 		super().__init__(self)
 
-			
+
 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 		"""
 		Connect the object to a database to access the bracket information
 		dbtype :str: Type of database to use
 		path :str: Path to the database (either url or directory path)
 		database :str: Database name
-				
+
 		"""
 # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 		if type(dbtype)!= str:
@@ -335,15 +365,15 @@ class OBFData_PersonalInformation(PersonalInformation.PersonalInformation):
 							   pragmas={'journal_mode': 'wal'}))
 # 			self.db = config.db
 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw'],
-                        port=kwargs['port']))
+						password=kwargs['pw'],
+						port=kwargs['port']))
 # 			self.db = config.db
 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 						host=kwargs['host'],
-                        password=kwargs['pw']))
+						password=kwargs['pw']))
 # 			self.db = config.db
 		else:
 			pass
@@ -362,16 +392,20 @@ class OBFData_PersonalInformation(PersonalInformation.PersonalInformation):
 
 ## TODO Later, Characters
 # class OBFData_Characters():
+# """
+# This is the class focues on the indiviual Character field within OBF.
+# It will only retrieve/store data within the designated Character.
+# """
 # 	def __init__(self):
 # 		self.db = obfdb
-			
+
 # 	def connect(self,dbtype = None, path=None, database=None, **kwargs):
 # 		"""
 # 		Connect the object to a database to access the bracket information
 # 		dbtype :str: Type of database to use
 # 		path :str: Path to the database (either url or directory path)
 # 		database :str: Database name
-				
+
 # 		"""
 # # 		self.db.initialize_proxy(dbtype,path,database,**kwargs)
 # 		if type(dbtype)!= str:
@@ -383,15 +417,15 @@ class OBFData_PersonalInformation(PersonalInformation.PersonalInformation):
 # 							   pragmas={'journal_mode': 'wal'}))
 # # 			self.db = config.db
 # 		if dbtype.lower() in ['postgres', 'post','postgresql']:
-# 			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'], 
+# 			cself.db.initialize(PostgresqlDatabase(database, user=kwargs['user'],
 # 						host=kwargs['host'],
-#                         password=kwargs['pw'],
-#                         port=kwargs['port']))
+#						 password=kwargs['pw'],
+#						 port=kwargs['port']))
 # # 			self.db = config.db
 # 		if dbtype.lower()  in ['mariadb', 'mysql','mysqldb']:
-# 			self.db.initialize(MySQLDatabase(database, user=kwargs['user'], 
+# 			self.db.initialize(MySQLDatabase(database, user=kwargs['user'],
 # 						host=kwargs['host'],
-#                         password=kwargs['pw']))
+#						 password=kwargs['pw']))
 # # 			self.db = config.db
 # 		else:
 # 			pass

@@ -6,6 +6,9 @@ import json
 from obfmodels import db, PersonalInformationObf
 
 class PersonalInformation():
+	"""
+	This is the class that stores and retrieves Personal Information data.
+	"""
 	# Initialize the data
 	def __init__(self,name=None,entrant_language=None,gender=None, country=None, pronouns=None, \
 	other=None,entrantTag=None, prefix=None):
@@ -21,11 +24,11 @@ class PersonalInformation():
 
 	def savepersonalinformation(self,savedata='update'):
 		"""Save player information
-		
+
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""	
+		"""
 		try:
 			db.connect()
 		except Exception as e:
@@ -70,11 +73,11 @@ class PersonalInformation():
 		return 1
 	def getpersonalinformation(self):
 		"""Get player information
-		
+
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""	
+		"""
 		try:
 			db.connect()
 		except Exception as e:
@@ -98,11 +101,11 @@ class PersonalInformation():
 			return None
 	def exportpersonalinformation(self):
 		"""Export Player info into a dictonary
-		
+
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: dict
-		"""	
+		"""
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		player_obj =  model_to_dict(self.getpersonalinformation())
 		del player_obj['tableid'] # Delete table id since it's not needed
@@ -113,11 +116,10 @@ class PersonalInformation():
 		return player_obj
 	def exportpersonalinformationjsonstring(self):
 		"""Export Player info into a json string
-		
-		:param none: 
+
+		:param none:
 		:type: str
 		:return: str
-		"""	
+		"""
 		player_obj = self.getpersonalinformation()
 		return json.dumps(str({'personalInformation':player_obj}))
-		

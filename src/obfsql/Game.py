@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 import json
 
-from obfmodels import db, GameObf, CharactersObf
+from obfmodels import db, GameObf, CharacterObf
 
-	
+
 class Game():
+	"""
+	This is the class that stores and retrieves Game data.
+	It will also retrieve Character data.
+	"""
+
 	# Initialize the data
 	def __init__(self,gameNumber=None,entrant1Characters=None,entrant2Characters=None,\
 				stage=None, entrant1Result=None,entrant2Result=None,setID=None,\
@@ -59,10 +64,10 @@ class Game():
 					eh_list.append({
 					'entrantCharacterName': i,
 					'entrantCharacterNameID': entrant2hash})
-				CharInfo = CharactersObf.delete().where(\
-				CharactersObf.entrantCharacterNameID.in_(\
-				[entrant1hash,entrant2hash])).execute()	
-				CharInfo = CharactersObf.insert_many(eh_list)
+				CharInfo = CharacterObf.delete().where(\
+				CharacterObf.entrantCharacterNameID.in_(\
+				[entrant1hash,entrant2hash])).execute()
+				CharInfo = CharacterObf.insert_many(eh_list)
 				CharInfo.execute()
 				db.close()
 				return 1
@@ -81,7 +86,7 @@ class Game():
 						setID = self.setID,
 						stage=self.stage,
 						other=self.other,
-						tableid = secrets.token_hex(nbytes=16)	
+						tableid = secrets.token_hex(nbytes=16)
 				)
 			#Entrance dictionary for inserts
 			eh_list =[]
@@ -93,17 +98,17 @@ class Game():
 				eh_list.append({
 				'entrantCharacterName': i,
 				'entrantCharacterNameID': entrant2hash})
-			CharInfo = CharactersObf.insert_many(eh_list)
+			CharInfo = CharacterObf.insert_many(eh_list)
 			CharInfo.execute()
 			db.close()
 		return 1
 	def getgame(self):
 		"""Get game information
-		
+
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: boolean
-		"""	
+		"""
 		try:
 			db.connect()
 		except Exception as e:
@@ -121,10 +126,10 @@ class Game():
 			entrant2list = []
 			entrant1hash = query.entrant1Characters.decode("utf-8")
 			entrant2hash = query.entrant2Characters.decode("utf-8")
-			CharInfo = CharactersObf.select().where(\
-				CharactersObf.entrantCharacterNameID.in_(\
+			CharInfo = CharacterObf.select().where(\
+				CharacterObf.entrantCharacterNameID.in_(\
 				[str(entrant1hash),str(entrant2hash)]))
-			CharInfo.execute()	
+			CharInfo.execute()
 			for i in CharInfo:
 				if i.entrantCharacterNameID == str(entrant1hash):
 					entrant1list.append(i.entrantCharacterName)
@@ -137,11 +142,11 @@ class Game():
 			return None
 	def exportgame(self):
 		"""Export Set info into a dictonary
-	
+
 		:param savedata: Method of saving the data new is new data, rewrite is rewriting data
 		:type: str
 		:return: dict
-		"""	
+		"""
 		from playhouse.shortcuts import model_to_dict, dict_to_model
 		game_obj =  model_to_dict(self.getgame())
 		game_obj['other'] = json.loads(game_obj['other'])
@@ -150,11 +155,11 @@ class Game():
 		return game_obj
 	def exportgamejsonstring(self):
 		"""Export Player info into a json string
-		
-		:param none: 
+
+		:param none:
 		:type: str
 		:return: str
-		"""	
+		"""
 		game_obj = self.exportgame()
 		return json.dumps(str({'Set':game_obj}))
 	def exportgames(self):
@@ -189,7 +194,7 @@ class Game():
 			CharInfo = CharactersObf.select().where(\
 				CharactersObf.entrantCharacterNameID.in_(\
 				[str(entrant1hash),str(entrant2hash)]))
-			CharInfo.execute()	
+			CharInfo.execute()
 			for i in CharInfo:
 				if i.entrantCharacterNameID == str(entrant1hash):
 					entrant1list.append(i.entrantCharacterName)
